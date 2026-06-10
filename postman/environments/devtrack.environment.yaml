@@ -1,0 +1,8 @@
+name: devtrack
+values:
+  - key: devtrack
+    value: ''
+  - key: devtract
+    secret: true
+  - key: devTrack
+    secret: true

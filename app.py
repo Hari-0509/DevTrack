@@ -1,4 +1,7 @@
 from flask import Flask
+from flask_jwt_extended import JWTManager
+
+from utils.password import bcrypt
 
 from config import Config
 from database.db import db
@@ -12,7 +15,10 @@ app = Flask(__name__)
 
 app.config.from_object(Config)
 
+jwt = JWTManager(app)
+
 db.init_app(app)
+bcrypt.init_app(app)
 
 app.register_blueprint(auth)
 app.register_blueprint(projects)
