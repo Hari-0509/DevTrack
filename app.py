@@ -11,6 +11,10 @@ from routes.projects import projects
 from routes.tasks import tasks
 from routes.dashboard import dashboard
 
+from models.user import User
+from models.project import Project
+from models.task import Task
+
 app = Flask(__name__)
 
 app.config.from_object(Config)

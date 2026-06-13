@@ -1,12 +1,125 @@
 from flask import Blueprint
+from flask import request
+
+from flask_jwt_extended import (
+    jwt_required,
+    get_jwt_identity
+)
+
+from database.db import db
+from models.task import Task
+from models.project import Project
 
 tasks = Blueprint(
     "tasks",
     __name__
 )
 
-@tasks.route("/tasks")
-def get_tasks():
+
+@tasks.route("/tasks", methods=["POST"])
+@jwt_required()
+def create_task():
+
+    current_user = int(
+        get_jwt_identity()
+    )
+
+    data = request.get_json()
+
+    project = Project.query.filter_by(
+        id=data.get("project_id"),
+        user_id=current_user
+    ).first()
+
+    if not project:
+        return {
+            "message": "Project not found"
+        }, 404
+
+    task = Task(
+        task_name=data.get("task_name"),
+        description=data.get("description"),
+        project_id=project.id
+    )
+
+    db.session.add(task)
+    db.session.commit()
+
     return {
-        "message": "Tasks API Working"
+        "message":"Task created successfully"
+    }, 201
+@tasks.route("/tasks", methods=["GET"])
+@jwt_required()
+def get_tasks():
+
+    current_user = int(
+        get_jwt_identity()
+    )
+
+    user_projects = Project.query.filter_by(
+        user_id=current_user
+    ).all()
+
+    project_ids = [
+        p.id
+        for p in user_projects
+    ]
+
+    task_list = Task.query.filter(
+        Task.project_id.in_(project_ids)
+    ).all()
+
+    return [
+        task.to_dict()
+        for task in task_list
+    ]
+@tasks.route("/tasks/<int:task_id>", methods=["PUT"])
+@jwt_required()
+def update_task(task_id):
+
+    task = Task.query.get(task_id)
+
+    if not task:
+        return {
+            "message":"Task not found"
+        }, 404
+
+    data = request.get_json()
+
+    task.task_name = data.get(
+        "task_name",
+        task.task_name
+    )
+
+    task.description = data.get(
+        "description",
+        task.description
+    )
+
+    task.completed = data.get(
+        "completed",
+        task.completed
+    )
+
+    db.session.commit()
+
+    return {
+        "message":"Task updated successfully"
+    }
+@tasks.route("/tasks/<int:task_id>", methods=["DELETE"])
+@jwt_required()
+def delete_task(task_id):
+
+    task = Task.query.get(task_id)
+
+    if not task:
+        return {
+            "message":"Task not found"
+        }, 404
+
+    db.session.delete(task)
+    db.session.commit()
+
+    return {
+        "message":"Task deleted successfully"
     }
