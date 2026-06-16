@@ -4,7 +4,10 @@ class Project(db.Model):
 
     __tablename__ = "projects"
 
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(
+        db.Integer,
+        primary_key=True
+    )
 
     title = db.Column(
         db.String(200),
@@ -22,5 +25,15 @@ class Project(db.Model):
 
     user_id = db.Column(
         db.Integer,
-        db.ForeignKey("users.id")
+        nullable=False
     )
+
+    def to_dict(self):
+
+        return {
+            "id": self.id,
+            "title": self.title,
+            "description": self.description,
+            "status": self.status,
+            "user_id": self.user_id
+        }
