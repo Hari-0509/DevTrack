@@ -13,7 +13,8 @@ import {
 } from "react-router-dom";
 
 function Sidebar() {
-  const location = useLocation();
+  const location =
+    useLocation();
 
   const menu = [
     {

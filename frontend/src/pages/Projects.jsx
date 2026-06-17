@@ -1,148 +1,388 @@
 import { useEffect, useState } from "react";
-import api from "../services/api";
 import MainLayout from "../layouts/MainLayout";
+import api from "../services/api";
+import { FolderKanban, Plus } from "lucide-react";
 
 function Projects() {
+  const [projects, setProjects] = useState([]);
+  const [search, setSearch] = useState("");
 
-    const [projects, setProjects] = useState([]);
+  const [showModal, setShowModal] =
+    useState(false);
 
-    const [title, setTitle] = useState("");
+  const [title, setTitle] =
+    useState("");
 
-    const [description, setDescription] =
-        useState("");
+  const [
+    description,
+    setDescription,
+  ] = useState("");
 
-    useEffect(() => {
+  useEffect(() => {
+    loadProjects();
+  }, []);
+
+  const loadProjects = async () => {
+    try {
+      const response =
+        await api.get("/projects");
+
+      setProjects(
+        Array.isArray(
+          response.data
+        )
+          ? response.data
+          : []
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const createProject =
+    async () => {
+      try {
+        await api.post(
+          "/projects",
+          {
+            title,
+            description,
+          }
+        );
+
+        setTitle("");
+        setDescription("");
+        setShowModal(false);
+
         loadProjects();
-    }, []);
-
-    const loadProjects = async () => {
-
-        try {
-
-            const response = await api.get("/projects");
-
-            console.log(response.data);
-
-            setProjects(response.data);
-
-        } catch (error) {
-
-            console.log(error);
-
-        }
+      } catch (error) {
+        console.log(error);
+      }
     };
 
-    const createProject = async () => {
+  const filteredProjects =
+    projects.filter(
+      (project) =>
+        project.title
+          ?.toLowerCase()
+          .includes(
+            search.toLowerCase()
+          )
+    );
 
-        try {
+  return (
+    <MainLayout>
+      {/* Header */}
 
-            await api.post(
-                "/projects",
-                {
-                    title,
-                    description
-                }
-            );
+      <div
+        style={{
+          display: "flex",
+          justifyContent:
+            "space-between",
+          alignItems:
+            "center",
+          marginBottom:
+            "40px",
+        }}
+      >
+        <div>
+          <h1
+            style={{
+              fontSize:
+                "40px",
+            }}
+          >
+            Projects
+          </h1>
 
-            setTitle("");
-            setDescription("");
+          <p
+            style={{
+              color:
+                "#64748B",
+              marginTop:
+                "10px",
+            }}
+          >
+            Manage your
+            projects
+            efficiently.
+          </p>
+        </div>
 
-            loadProjects();
+        <button
+          onClick={() =>
+            setShowModal(true)
+          }
+          style={{
+            background:
+              "#2563EB",
+            color: "white",
+            border: "none",
+            padding:
+              "15px 25px",
+            borderRadius:
+              "16px",
+            display: "flex",
+            gap: "10px",
+            alignItems:
+              "center",
+            cursor:
+              "pointer",
+            fontWeight:
+              "600",
+          }}
+        >
+          <Plus size={20} />
+          New Project
+        </button>
+      </div>
 
-        } catch (error) {
+      {/* Search */}
 
-            console.log(error);
-
+      <input
+        placeholder="Search Projects..."
+        value={search}
+        onChange={(e) =>
+          setSearch(
+            e.target.value
+          )
         }
-    };
+        style={{
+          width: "100%",
+          padding: "18px",
+          border:
+            "1px solid #E2E8F0",
+          borderRadius:
+            "18px",
+          marginBottom:
+            "40px",
+          fontSize: "15px",
+        }}
+      />
 
-    return (
+      {/* Project Cards */}
 
-        <MainLayout>
-
-            <h1
-                style={{
-                    color: "white"
-                }}
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns:
+            "repeat(auto-fill,minmax(350px,1fr))",
+          gap: "25px",
+        }}
+      >
+        {filteredProjects.map(
+          (project) => (
+            <div
+              key={project.id}
+              style={{
+                background:
+                  "white",
+                border:
+                  "1px solid #E2E8F0",
+                borderRadius:
+                  "24px",
+                padding:
+                  "30px",
+                boxShadow:
+                  "0 10px 30px rgba(0,0,0,0.05)",
+              }}
             >
-                Projects
+              <FolderKanban
+                size={35}
+                color="#2563EB"
+              />
+
+              <h2
+                style={{
+                  marginTop:
+                    "20px",
+                  marginBottom:
+                    "15px",
+                }}
+              >
+                {
+                  project.title
+                }
+              </h2>
+
+              <p
+                style={{
+                  color:
+                    "#64748B",
+                  lineHeight:
+                    "1.7",
+                  marginBottom:
+                    "25px",
+                }}
+              >
+                {
+                  project.description
+                }
+              </p>
+
+              <span
+                style={{
+                  background:
+                    "#DCFCE7",
+                  color:
+                    "#16A34A",
+                  padding:
+                    "8px 18px",
+                  borderRadius:
+                    "30px",
+                  fontSize:
+                    "14px",
+                  fontWeight:
+                    "600",
+                }}
+              >
+                In Progress
+              </span>
+            </div>
+          )
+        )}
+      </div>
+
+      {/* Modal */}
+
+      {showModal && (
+        <div
+          style={{
+            position:
+              "fixed",
+            inset: 0,
+            background:
+              "rgba(0,0,0,0.4)",
+            display: "flex",
+            justifyContent:
+              "center",
+            alignItems:
+              "center",
+          }}
+        >
+          <div
+            style={{
+              width: "500px",
+              background:
+                "white",
+              padding:
+                "40px",
+              borderRadius:
+                "30px",
+            }}
+          >
+            <h1
+              style={{
+                marginBottom:
+                  "30px",
+              }}
+            >
+              Create New
+              Project
             </h1>
 
+            <input
+              placeholder="Project Title"
+              value={title}
+              onChange={(e) =>
+                setTitle(
+                  e.target
+                    .value
+                )
+              }
+              style={
+                inputStyle
+              }
+            />
+
+            <textarea
+              placeholder="Description"
+              value={
+                description
+              }
+              onChange={(e) =>
+                setDescription(
+                  e.target
+                    .value
+                )
+              }
+              style={{
+                ...inputStyle,
+                height:
+                  "120px",
+              }}
+            />
+
             <div
-                style={{
-                    background: "#1e293b",
-                    padding: "20px",
-                    borderRadius: "10px",
-                    marginBottom: "20px"
-                }}
+              style={{
+                display:
+                  "flex",
+                justifyContent:
+                  "flex-end",
+                gap: "15px",
+                marginTop:
+                  "30px",
+              }}
             >
+              <button
+                onClick={() =>
+                  setShowModal(
+                    false
+                  )
+                }
+                style={{
+                  padding:
+                    "15px 25px",
+                  background:
+                    "white",
+                  border:
+                    "1px solid #E2E8F0",
+                  borderRadius:
+                    "14px",
+                  cursor:
+                    "pointer",
+                }}
+              >
+                Cancel
+              </button>
 
-                <input
-                    placeholder="Project Title"
-                    value={title}
-                    onChange={(e) =>
-                        setTitle(e.target.value)
-                    }
-                />
-
-                <br />
-                <br />
-
-                <textarea
-                    placeholder="Description"
-                    value={description}
-                    onChange={(e) =>
-                        setDescription(
-                            e.target.value
-                        )
-                    }
-                />
-
-                <br />
-                <br />
-
-                <button
-                    onClick={createProject}
-                >
-                    Create Project
-                </button>
-
+              <button
+                onClick={
+                  createProject
+                }
+                style={{
+                  padding:
+                    "15px 25px",
+                  background:
+                    "#2563EB",
+                  color:
+                    "white",
+                  border:
+                    "none",
+                  borderRadius:
+                    "14px",
+                  cursor:
+                    "pointer",
+                }}
+              >
+                Create
+              </button>
             </div>
-
-            {projects.map((project) => (
-
-                <div
-                    key={project.id}
-                    style={{
-                        background: "#1e293b",
-                        color: "white",
-                        padding: "20px",
-                        borderRadius: "10px",
-                        marginBottom: "15px"
-                    }}
-                >
-
-                    <h3>
-                        {project.title}
-                    </h3>
-
-                    <p>
-                        {project.description}
-                    </p>
-
-                    <p>
-                        Status:
-                        {" "}
-                        {project.status}
-                    </p>
-
-                </div>
-
-            ))}
-
-        </MainLayout>
-
-    );
+          </div>
+        </div>
+      )}
+    </MainLayout>
+  );
 }
+
+const inputStyle = {
+  width: "100%",
+  padding: "18px",
+  marginBottom: "20px",
+  border: "1px solid #E2E8F0",
+  borderRadius: "16px",
+  fontSize: "15px",
+  outline: "none",
+};
 
 export default Projects;
