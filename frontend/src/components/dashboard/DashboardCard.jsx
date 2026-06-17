@@ -1,52 +1,37 @@
-import Card from "../ui/Card";
-
 function DashboardCard({
   title,
   value,
-  icon
+  color
 }) {
   return (
-    <Card>
-
-      <div
+    <div
+      style={{
+        background: "white",
+        borderRadius: "24px",
+        padding: "30px",
+        border: "1px solid #E2E8F0",
+        boxShadow:
+          "0 10px 30px rgba(0,0,0,0.05)",
+      }}
+    >
+      <p
         style={{
-          display: "flex",
-          justifyContent:
-            "space-between"
+          color: "#64748B",
+          marginBottom: "20px",
         }}
       >
-        <div>
+        {title}
+      </p>
 
-          <h3
-            style={{
-              color: "#94a3b8"
-            }}
-          >
-            {title}
-          </h3>
-
-          <h1
-            style={{
-              marginTop: "15px",
-              fontSize: "40px"
-            }}
-          >
-            {value}
-          </h1>
-
-        </div>
-
-        <div
-          style={{
-            fontSize: "45px"
-          }}
-        >
-          {icon}
-        </div>
-
-      </div>
-
-    </Card>
+      <h1
+        style={{
+          fontSize: "42px",
+          color,
+        }}
+      >
+        {value}
+      </h1>
+    </div>
   );
 }
 
