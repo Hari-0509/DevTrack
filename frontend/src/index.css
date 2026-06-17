@@ -5,12 +5,12 @@
 }
 
 body {
-  background: #0f172a;
-  color: white;
   font-family:
     Inter,
     "Segoe UI",
     sans-serif;
+  background: #f8fafc;
+  color: #0f172a;
 }
 
 a {
@@ -18,10 +18,7 @@ a {
   color: inherit;
 }
 
-button {
-  font-family: inherit;
-}
-
+button,
 input,
 textarea {
   font-family: inherit;

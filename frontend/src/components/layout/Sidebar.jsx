@@ -1,24 +1,62 @@
 import {
-  FaChartPie,
-  FaFolder,
-  FaTasks,
-  FaSignOutAlt
-} from "react-icons/fa";
+  LayoutDashboard,
+  FolderKanban,
+  CheckSquare,
+  BarChart3,
+  Settings,
+  LogOut
+} from "lucide-react";
 
-import { Link } from "react-router-dom";
+import {
+  Link,
+  useLocation
+} from "react-router-dom";
 
 function Sidebar() {
+  const location = useLocation();
+
+  const menu = [
+    {
+      title: "Dashboard",
+      icon: LayoutDashboard,
+      path: "/"
+    },
+    {
+      title: "Projects",
+      icon: FolderKanban,
+      path: "/projects"
+    },
+    {
+      title: "Tasks",
+      icon: CheckSquare,
+      path: "/tasks"
+    },
+    {
+      title: "Analytics",
+      icon: BarChart3,
+      path: "/analytics"
+    },
+    {
+      title: "Settings",
+      icon: Settings,
+      path: "/settings"
+    }
+  ];
+
   return (
     <div
       style={{
-        width: "260px",
-        background: "#1e293b",
+        width: "280px",
+        background: "#ffffff",
+        borderRight:
+          "1px solid #e2e8f0",
         minHeight: "100vh",
-        padding: "30px"
+        padding: "40px 25px"
       }}
     >
       <h1
         style={{
+          color: "#2563EB",
           marginBottom: "50px"
         }}
       >
@@ -28,25 +66,76 @@ function Sidebar() {
       <div
         style={{
           display: "flex",
-          flexDirection: "column",
-          gap: "25px"
+          flexDirection:
+            "column",
+          gap: "10px"
         }}
       >
-        <Link to="/">
-          <FaChartPie /> Dashboard
-        </Link>
+        {menu.map((item) => {
 
-        <Link to="/projects">
-          <FaFolder /> Projects
-        </Link>
+          const Icon =
+            item.icon;
 
-        <Link to="/tasks">
-          <FaTasks /> Tasks
-        </Link>
+          const active =
+            location.pathname ===
+            item.path;
 
-        <Link to="/login">
-          <FaSignOutAlt /> Logout
-        </Link>
+          return (
+            <Link
+              key={item.path}
+              to={item.path}
+              style={{
+                display: "flex",
+                alignItems:
+                  "center",
+                gap: "15px",
+                padding:
+                  "15px 20px",
+                borderRadius:
+                  "14px",
+                background:
+                  active
+                    ? "#EFF6FF"
+                    : "transparent",
+                color:
+                  active
+                    ? "#2563EB"
+                    : "#64748B",
+                fontWeight: 600
+              }}
+            >
+              <Icon size={20} />
+              {item.title}
+            </Link>
+          );
+        })}
+      </div>
+
+      <div
+        style={{
+          marginTop: "80px"
+        }}
+      >
+        <button
+          style={{
+            width: "100%",
+            background:
+              "#ffffff",
+            border:
+              "1px solid #e2e8f0",
+            padding: "15px",
+            borderRadius:
+              "14px",
+            cursor: "pointer",
+            display: "flex",
+            gap: "15px",
+            alignItems:
+              "center"
+          }}
+        >
+          <LogOut />
+          Logout
+        </button>
       </div>
     </div>
   );
