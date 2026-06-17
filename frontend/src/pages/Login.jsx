@@ -1,108 +1,231 @@
-import { useState } from "react";
-import api from "../services/api";
+import { Link } from "react-router-dom";
 
 function Login() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-
-  const login = async () => {
-    try {
-      const response = await api.post("/login", {
-        email,
-        password,
-      });
-
-      localStorage.setItem(
-        "token",
-        response.data.token
-      );
-
-      window.location.href = "/";
-    } catch {
-      alert("Invalid Credentials");
-    }
-  };
-
   return (
     <div
       style={{
         minHeight: "100vh",
-        background: "#0f172a",
         display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
+        background: "#F8FAFC",
       }}
     >
+      {/* Left Side */}
       <div
         style={{
-          width: "420px",
-          background: "#1e293b",
-          padding: "40px",
-          borderRadius: "16px",
-          boxShadow:
-            "0 10px 30px rgba(0,0,0,0.3)",
+          flex: 1,
+          background:
+            "linear-gradient(135deg, #2563EB 0%, #7C3AED 100%)",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          color: "white",
+          position: "relative",
+          overflow: "hidden",
+          padding: "60px",
         }}
       >
-        <h1
+        {/* Decorative Circles */}
+        <div
           style={{
-            color: "white",
-            textAlign: "center",
-            marginBottom: "30px",
-          }}
-        >
-          DevTrack
-        </h1>
-
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) =>
-            setEmail(e.target.value)
-          }
-          style={{
-            width: "100%",
-            padding: "14px",
-            marginBottom: "15px",
-            borderRadius: "10px",
-            border: "none",
+            width: "300px",
+            height: "300px",
+            borderRadius: "50%",
+            background: "rgba(255,255,255,0.10)",
+            position: "absolute",
+            top: "-100px",
+            right: "-100px",
           }}
         />
 
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) =>
-            setPassword(e.target.value)
-          }
+        <div
           style={{
-            width: "100%",
-            padding: "14px",
-            marginBottom: "20px",
-            borderRadius: "10px",
-            border: "none",
+            width: "250px",
+            height: "250px",
+            borderRadius: "50%",
+            background: "rgba(255,255,255,0.08)",
+            position: "absolute",
+            bottom: "-80px",
+            left: "-80px",
           }}
         />
 
-        <button
-          onClick={login}
+        <div
           style={{
-            width: "100%",
-            padding: "14px",
-            borderRadius: "10px",
-            border: "none",
-            background: "#2563eb",
-            color: "white",
-            cursor: "pointer",
-            fontWeight: "bold",
+            maxWidth: "500px",
+            zIndex: 1,
           }}
         >
-          Login
-        </button>
+          <h1
+            style={{
+              fontSize: "70px",
+              marginBottom: "30px",
+              fontWeight: "800",
+            }}
+          >
+            DevTrack
+          </h1>
+
+          <h2
+            style={{
+              fontSize: "42px",
+              lineHeight: "1.3",
+              marginBottom: "25px",
+            }}
+          >
+            Manage Projects Smarter 🚀
+          </h2>
+
+          <p
+            style={{
+              fontSize: "20px",
+              lineHeight: "1.8",
+              opacity: "0.9",
+            }}
+          >
+            Organize projects, track tasks,
+            monitor progress, and collaborate
+            efficiently from one powerful platform.
+          </p>
+        </div>
+      </div>
+
+      {/* Right Side */}
+      <div
+        style={{
+          flex: 1,
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          padding: "40px",
+        }}
+      >
+        <div
+          style={{
+            width: "460px",
+            background: "#FFFFFF",
+            padding: "50px",
+            borderRadius: "30px",
+            boxShadow:
+              "0 20px 60px rgba(15,23,42,0.08)",
+          }}
+        >
+          <h1
+            style={{
+              textAlign: "center",
+              fontSize: "38px",
+              marginBottom: "10px",
+              color: "#0F172A",
+            }}
+          >
+            Welcome Back
+          </h1>
+
+          <p
+            style={{
+              textAlign: "center",
+              color: "#64748B",
+              marginBottom: "40px",
+              fontSize: "16px",
+            }}
+          >
+            Sign in to continue to DevTrack
+          </p>
+
+          <input
+            type="email"
+            placeholder="Email Address"
+            style={inputStyle}
+          />
+
+          <input
+            type="password"
+            placeholder="Password"
+            style={inputStyle}
+          />
+
+          <button style={buttonStyle}>
+            Sign In
+          </button>
+
+          <div
+            style={{
+              textAlign: "center",
+              margin: "30px 0",
+              color: "#64748B",
+            }}
+          >
+            OR
+          </div>
+
+          <button style={googleButton}>
+            <img
+              src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
+              width="22"
+              alt="google"
+            />
+
+            Continue with Google
+          </button>
+
+          <p
+            style={{
+              marginTop: "30px",
+              textAlign: "center",
+              color: "#64748B",
+            }}
+          >
+            Don't have an account?{" "}
+            <Link
+              to="/register"
+              style={{
+                color: "#2563EB",
+                fontWeight: "600",
+              }}
+            >
+              Create Account
+            </Link>
+          </p>
+        </div>
       </div>
     </div>
   );
 }
+
+const inputStyle = {
+  width: "100%",
+  padding: "18px",
+  marginBottom: "20px",
+  borderRadius: "16px",
+  border: "1px solid #E2E8F0",
+  fontSize: "15px",
+  outline: "none",
+};
+
+const buttonStyle = {
+  width: "100%",
+  padding: "18px",
+  background: "#2563EB",
+  color: "white",
+  border: "none",
+  borderRadius: "16px",
+  fontSize: "16px",
+  fontWeight: "600",
+  cursor: "pointer",
+};
+
+const googleButton = {
+  width: "100%",
+  padding: "18px",
+  background: "#FFFFFF",
+  border: "1px solid #E2E8F0",
+  borderRadius: "16px",
+  cursor: "pointer",
+  fontSize: "15px",
+  fontWeight: "600",
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  gap: "12px",
+};
 
 export default Login;

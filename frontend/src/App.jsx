@@ -10,6 +10,7 @@ import Dashboard from "./pages/Dashboard";
 import Projects from "./pages/Projects";
 import Tasks from "./pages/Tasks";
 
+
 import ProtectedRoute
 from "./routes/ProtectedRoute";
 
@@ -25,12 +26,7 @@ function App() {
                     path="/login"
                     element={<Login />}
                 />
-
-                <Route
-                    path="/register"
-                    element={<Register />}
-                />
-
+                
                 <Route
                     path="/"
                     element={
@@ -55,6 +51,10 @@ function App() {
                             <Tasks />
                         </ProtectedRoute>
                     }
+                />
+                <Route
+                    path="/register"
+                    element={<Register />}
                 />
 
             </Routes>

@@ -8,7 +8,8 @@ function MainLayout({
     <div
       style={{
         display: "flex",
-        background: "#0f172a"
+        background:
+          "#F8FAFC"
       }}
     >
       <Sidebar />
@@ -21,7 +22,13 @@ function MainLayout({
       >
         <Navbar />
 
-        {children}
+        <div
+          style={{
+            marginTop: "30px"
+          }}
+        >
+          {children}
+        </div>
       </div>
     </div>
   );
