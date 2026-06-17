@@ -1,11 +1,13 @@
-import Sidebar from "../components/Sidebar";
+import Sidebar from "../components/layout/Sidebar";
+import Navbar from "../components/layout/Navbar";
 
-function MainLayout({ children }) {
+function MainLayout({
+  children
+}) {
   return (
     <div
       style={{
         display: "flex",
-        minHeight: "100vh",
         background: "#0f172a"
       }}
     >
@@ -17,6 +19,8 @@ function MainLayout({ children }) {
           padding: "30px"
         }}
       >
+        <Navbar />
+
         {children}
       </div>
     </div>
