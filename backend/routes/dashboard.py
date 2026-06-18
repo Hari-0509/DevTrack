@@ -28,9 +28,8 @@ def get_stats():
     ).all()
 
     project_ids = [
-        project.id
-        for project
-        in projects
+        p.id
+        for p in projects
     ]
 
     tasks = Task.query.filter(
@@ -41,21 +40,26 @@ def get_stats():
 
     completed = len([
         task
-        for task
-        in tasks
+        for task in tasks
         if task.status ==
         "Completed"
     ])
 
-    pending = len(tasks) - completed
+    pending = (
+        len(tasks)
+        - completed
+    )
 
     return {
         "projects":
             len(projects),
+
         "tasks":
             len(tasks),
+
         "completed":
             completed,
+
         "pending":
             pending
     }
@@ -76,9 +80,8 @@ def get_charts():
     ).all()
 
     project_ids = [
-        project.id
-        for project
-        in projects
+        p.id
+        for p in projects
     ]
 
     tasks = Task.query.filter(
@@ -88,31 +91,33 @@ def get_charts():
     ).all()
 
     todo = len([
-        task
-        for task
-        in tasks
-        if task.status ==
+        t
+        for t in tasks
+        if t.status ==
         "Todo"
     ])
 
     progress = len([
-        task
-        for task
-        in tasks
-        if task.status ==
+        t
+        for t in tasks
+        if t.status ==
         "In Progress"
     ])
 
     completed = len([
-        task
-        for task
-        in tasks
-        if task.status ==
+        t
+        for t in tasks
+        if t.status ==
         "Completed"
     ])
 
     return {
-        "todo": todo,
-        "progress": progress,
-        "completed": completed
+        "todo":
+            todo,
+
+        "progress":
+            progress,
+
+        "completed":
+            completed
     }
