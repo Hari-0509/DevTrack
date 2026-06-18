@@ -9,6 +9,9 @@ function Tasks() {
   const [showModal, setShowModal] =
     useState(false);
 
+  const [editingTask, setEditingTask] =
+    useState(null);
+
   const [taskName, setTaskName] =
     useState("");
 
@@ -75,17 +78,78 @@ function Tasks() {
           }
         );
 
-        setTaskName("");
-        setDescription("");
-        setStatus("Todo");
-        setProjectId("");
-        setShowModal(false);
+        clearForm();
+        loadTasks();
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+  const updateTask =
+    async () => {
+      try {
+        await api.put(
+          `/tasks/${editingTask.id}`,
+          {
+            task_name:
+              taskName,
+            description,
+            status,
+          }
+        );
+
+        clearForm();
+        loadTasks();
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+  const deleteTask =
+    async (id) => {
+      try {
+        await api.delete(
+          `/tasks/${id}`
+        );
 
         loadTasks();
       } catch (error) {
         console.log(error);
       }
     };
+
+  const editTask = (
+    task
+  ) => {
+    setEditingTask(task);
+
+    setTaskName(
+      task.task_name
+    );
+
+    setDescription(
+      task.description
+    );
+
+    setStatus(
+      task.status
+    );
+
+    setProjectId(
+      task.project_id
+    );
+
+    setShowModal(true);
+  };
+
+  const clearForm = () => {
+    setTaskName("");
+    setDescription("");
+    setStatus("Todo");
+    setProjectId("");
+    setEditingTask(null);
+    setShowModal(false);
+  };
 
   const todo =
     tasks.filter(
@@ -127,11 +191,7 @@ function Tasks() {
           <h1
             style={{
               fontSize:
-                "42px",
-              fontWeight:
-                "700",
-              marginBottom:
-                "10px",
+                "40px",
             }}
           >
             Tasks
@@ -143,8 +203,8 @@ function Tasks() {
                 "#64748B",
             }}
           >
-            Manage your tasks
-            efficiently.
+            Manage your
+            tasks efficiently
           </p>
         </div>
 
@@ -152,22 +212,7 @@ function Tasks() {
           onClick={() =>
             setShowModal(true)
           }
-          style={{
-            background:
-              "#2563EB",
-            color: "white",
-            border: "none",
-            padding:
-              "15px 25px",
-            borderRadius:
-              "16px",
-            cursor:
-              "pointer",
-            fontWeight:
-              "600",
-            fontSize:
-              "15px",
-          }}
+          style={buttonStyle}
         >
           + New Task
         </button>
@@ -186,16 +231,28 @@ function Tasks() {
         <TaskColumn
           title={`Todo (${todo.length})`}
           tasks={todo}
+          onEdit={editTask}
+          onDelete={
+            deleteTask
+          }
         />
 
         <TaskColumn
           title={`In Progress (${progress.length})`}
           tasks={progress}
+          onEdit={editTask}
+          onDelete={
+            deleteTask
+          }
         />
 
         <TaskColumn
           title={`Completed (${completed.length})`}
           tasks={completed}
+          onEdit={editTask}
+          onDelete={
+            deleteTask
+          }
         />
       </div>
 
@@ -203,40 +260,15 @@ function Tasks() {
 
       {showModal && (
         <div
-          style={{
-            position:
-              "fixed",
-            inset: 0,
-            background:
-              "rgba(0,0,0,0.4)",
-            display: "flex",
-            justifyContent:
-              "center",
-            alignItems:
-              "center",
-            zIndex: 1000,
-          }}
+          style={overlay}
         >
           <div
-            style={{
-              width: "550px",
-              background:
-                "white",
-              padding:
-                "40px",
-              borderRadius:
-                "30px",
-              boxShadow:
-                "0 20px 50px rgba(0,0,0,0.15)",
-            }}
+            style={modal}
           >
-            <h2
-              style={{
-                marginBottom:
-                  "30px",
-              }}
-            >
-              Create New Task
+            <h2>
+              {editingTask
+                ? "Update Task"
+                : "Create Task"}
             </h2>
 
             <input
@@ -289,94 +321,61 @@ function Tasks() {
               </option>
             </select>
 
-            <select
-              value={projectId}
-              onChange={(e) =>
-                setProjectId(
-                  e.target.value
-                )
-              }
-              style={inputStyle}
-            >
-              <option value="">
-                Select Project
-              </option>
-
-              {projects.map(
-                (project) => (
-                  <option
-                    key={
-                      project.id
-                    }
-                    value={
-                      project.id
-                    }
-                  >
-                    {
-                      project.title
-                    }
-                  </option>
-                )
-              )}
-            </select>
-
-            <div
-              style={{
-                display:
-                  "flex",
-                justifyContent:
-                  "flex-end",
-                gap: "15px",
-                marginTop:
-                  "30px",
-              }}
-            >
-              <button
-                onClick={() =>
-                  setShowModal(
-                    false
+            {!editingTask && (
+              <select
+                value={
+                  projectId
+                }
+                onChange={(e) =>
+                  setProjectId(
+                    e.target
+                      .value
                   )
                 }
-                style={{
-                  padding:
-                    "15px 25px",
-                  background:
-                    "white",
-                  border:
-                    "1px solid #CBD5E1",
-                  borderRadius:
-                    "14px",
-                  cursor:
-                    "pointer",
-                }}
-              >
-                Cancel
-              </button>
-
-              <button
-                onClick={
-                  createTask
+                style={
+                  inputStyle
                 }
-                style={{
-                  padding:
-                    "15px 25px",
-                  background:
-                    "#2563EB",
-                  color:
-                    "white",
-                  border:
-                    "none",
-                  borderRadius:
-                    "14px",
-                  cursor:
-                    "pointer",
-                  fontWeight:
-                    "600",
-                }}
               >
-                Create Task
-              </button>
-            </div>
+                <option value="">
+                  Select
+                  Project
+                </option>
+
+                {projects.map(
+                  (
+                    project
+                  ) => (
+                    <option
+                      key={
+                        project.id
+                      }
+                      value={
+                        project.id
+                      }
+                    >
+                      {
+                        project.title
+                      }
+                    </option>
+                  )
+                )}
+              </select>
+            )}
+
+            <button
+              onClick={() =>
+                editingTask
+                  ? updateTask()
+                  : createTask()
+              }
+              style={
+                buttonStyle
+              }
+            >
+              {editingTask
+                ? "Update Task"
+                : "Create Task"}
+            </button>
           </div>
         </div>
       )}
@@ -384,11 +383,11 @@ function Tasks() {
   );
 }
 
-/* COLUMN */
-
 function TaskColumn({
   title,
   tasks,
+  onEdit,
+  onDelete,
 }) {
   return (
     <div
@@ -409,75 +408,85 @@ function TaskColumn({
         style={{
           marginBottom:
             "25px",
-          fontSize:
-            "24px",
         }}
       >
         {title}
       </h2>
 
-      {tasks.length === 0 ? (
-        <div
-          style={{
-            background:
-              "white",
-            border:
-              "2px dashed #CBD5E1",
-            padding:
-              "40px",
-            borderRadius:
-              "20px",
-            textAlign:
-              "center",
-            color:
-              "#94A3B8",
-          }}
-        >
-          No tasks yet
-        </div>
-      ) : (
-        tasks.map(
-          (task) => (
-            <div
-              key={task.id}
+      {tasks.map(
+        (task) => (
+          <div
+            key={
+              task.id
+            }
+            style={{
+              background:
+                "white",
+              padding:
+                "20px",
+              borderRadius:
+                "20px",
+              marginBottom:
+                "20px",
+              boxShadow:
+                "0 8px 20px rgba(0,0,0,0.05)",
+            }}
+          >
+            <h3>
+              {
+                task.task_name
+              }
+            </h3>
+
+            <p
               style={{
-                background:
-                  "white",
-                padding:
-                  "20px",
-                borderRadius:
-                  "20px",
-                marginBottom:
-                  "20px",
-                boxShadow:
-                  "0 8px 20px rgba(0,0,0,0.05)",
+                color:
+                  "#64748B",
+                marginTop:
+                  "10px",
               }}
             >
-              <h3
-                style={{
-                  marginBottom:
-                    "10px",
-                }}
-              >
-                {
-                  task.task_name
-                }
-              </h3>
+              {
+                task.description
+              }
+            </p>
 
-              <p
-                style={{
-                  color:
-                    "#64748B",
-                  lineHeight:
-                    "1.6",
-                }}
-              >
-                {
-                  task.description
+            <div
+              style={{
+                display:
+                  "flex",
+                gap: "10px",
+                marginTop:
+                  "20px",
+              }}
+            >
+              <button
+                onClick={() =>
+                  onEdit(
+                    task
+                  )
                 }
-              </p>
+                style={
+                  editButton
+                }
+              >
+                Edit
+              </button>
+
+              <button
+                onClick={() =>
+                  onDelete(
+                    task.id
+                  )
+                }
+                style={
+                  deleteButton
+                }
+              >
+                Delete
+              </button>
             </div>
-          )
+          </div>
         )
       )}
     </div>
@@ -493,7 +502,67 @@ const inputStyle = {
   borderRadius:
     "16px",
   fontSize: "15px",
-  outline: "none",
+};
+
+const buttonStyle = {
+  background:
+    "#2563EB",
+  color: "white",
+  border: "none",
+  padding:
+    "15px 25px",
+  borderRadius:
+    "16px",
+  cursor: "pointer",
+  fontWeight:
+    "600",
+};
+
+const editButton = {
+  background:
+    "#EFF6FF",
+  color:
+    "#2563EB",
+  border: "none",
+  padding:
+    "10px 16px",
+  borderRadius:
+    "12px",
+  cursor:
+    "pointer",
+};
+
+const deleteButton = {
+  background:
+    "#FEF2F2",
+  color:
+    "#DC2626",
+  border: "none",
+  padding:
+    "10px 16px",
+  borderRadius:
+    "12px",
+  cursor:
+    "pointer",
+};
+
+const overlay = {
+  position: "fixed",
+  inset: 0,
+  background:
+    "rgba(0,0,0,0.4)",
+  display: "flex",
+  justifyContent:
+    "center",
+  alignItems:
+    "center",
+};
+
+const modal = {
+  width: "550px",
+  background: "white",
+  padding: "40px",
+  borderRadius: "30px",
 };
 
 export default Tasks;

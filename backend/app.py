@@ -35,6 +35,17 @@ app.config.from_object(Config)
 
 jwt = JWTManager(app)
 
+@jwt.invalid_token_loader
+def invalid_token_callback(error):
+    print("INVALID TOKEN:", error)
+    return {"message": error}, 401
+
+
+@jwt.unauthorized_loader
+def missing_token_callback(error):
+    print("MISSING TOKEN:", error)
+    return {"message": error}, 401
+
 db.init_app(app)
 bcrypt.init_app(app)
 
