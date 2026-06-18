@@ -1,5 +1,4 @@
 from flask import Blueprint
-
 from flask_jwt_extended import (
     jwt_required,
     get_jwt_identity
@@ -13,37 +12,107 @@ dashboard = Blueprint(
     __name__
 )
 
-@dashboard.route("/dashboard")
-@jwt_required()
-def get_dashboard():
 
-    user_id = int(
+@dashboard.route(
+    "/dashboard/stats"
+)
+@jwt_required()
+def get_stats():
+
+    current_user = int(
         get_jwt_identity()
     )
 
     projects = Project.query.filter_by(
-        user_id=user_id
-    ).count()
+        user_id=current_user
+    ).all()
 
     project_ids = [
-        p.id
-        for p in Project.query.filter_by(
-            user_id=user_id
-        ).all()
+        project.id
+        for project
+        in projects
     ]
 
-    completed_tasks = Task.query.filter(
-        Task.project_id.in_(project_ids),
-        Task.completed == True
-    ).count()
+    tasks = Task.query.filter(
+        Task.project_id.in_(
+            project_ids
+        )
+    ).all()
 
-    pending_tasks = Task.query.filter(
-        Task.project_id.in_(project_ids),
-        Task.completed == False
-    ).count()
+    completed = len([
+        task
+        for task
+        in tasks
+        if task.status ==
+        "Completed"
+    ])
+
+    pending = len(tasks) - completed
 
     return {
-        "projects": projects,
-        "completed_tasks": completed_tasks,
-        "pending_tasks": pending_tasks
+        "projects":
+            len(projects),
+        "tasks":
+            len(tasks),
+        "completed":
+            completed,
+        "pending":
+            pending
+    }
+
+
+@dashboard.route(
+    "/dashboard/charts"
+)
+@jwt_required()
+def get_charts():
+
+    current_user = int(
+        get_jwt_identity()
+    )
+
+    projects = Project.query.filter_by(
+        user_id=current_user
+    ).all()
+
+    project_ids = [
+        project.id
+        for project
+        in projects
+    ]
+
+    tasks = Task.query.filter(
+        Task.project_id.in_(
+            project_ids
+        )
+    ).all()
+
+    todo = len([
+        task
+        for task
+        in tasks
+        if task.status ==
+        "Todo"
+    ])
+
+    progress = len([
+        task
+        for task
+        in tasks
+        if task.status ==
+        "In Progress"
+    ])
+
+    completed = len([
+        task
+        for task
+        in tasks
+        if task.status ==
+        "Completed"
+    ])
+
+    return {
+        "todo": todo,
+        "progress": progress,
+        "completed": completed
     }

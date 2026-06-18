@@ -24,6 +24,16 @@ class Task(db.Model):
         default="Todo"
     )
 
+    priority = db.Column(
+        db.String(20),
+        default="Medium"
+    )
+
+    due_date = db.Column(
+        db.Date,
+        nullable=True
+    )
+
     completed = db.Column(
         db.Boolean,
         default=False
@@ -31,7 +41,8 @@ class Task(db.Model):
 
     project_id = db.Column(
         db.Integer,
-        db.ForeignKey("projects.id")
+        db.ForeignKey("projects.id"),
+        nullable=False
     )
 
     def to_dict(self):
@@ -40,6 +51,11 @@ class Task(db.Model):
             "task_name": self.task_name,
             "description": self.description,
             "status": self.status,
+            "priority": self.priority,
+            "due_date":
+                str(self.due_date)
+                if self.due_date
+                else None,
             "completed": self.completed,
             "project_id": self.project_id
         }
