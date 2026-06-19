@@ -49,28 +49,23 @@ def create_task():
         description=data.get(
             "description"
         ),
+
         status=data.get(
             "status",
             "Todo"
         ),
+
         priority=data.get(
             "priority",
             "Medium"
         ),
-        due_date=(
-            datetime.strptime(
-                data.get(
-                    "due_date"
-                ),
-                "%Y-%m-%d"
-            ).date()
-            if data.get(
-                "due_date"
-            )
-            else None
-        ),
-        project_id=project.id
-    )
+
+    due_date=data.get(
+        "due_date"
+    ),
+
+    project_id=project.id
+)
 
     db.session.add(task)
     db.session.commit()
@@ -152,6 +147,11 @@ def update_task(task_id):
     task.priority = data.get(
     "priority",
     task.priority
+    )
+
+    task.due_date = data.get(
+    "due_date",
+    task.due_date
     )
 
     if data.get(

@@ -30,8 +30,7 @@ class Task(db.Model):
     )
 
     due_date = db.Column(
-        db.Date,
-        nullable=True
+        db.String(50)
     )
 
     completed = db.Column(
@@ -41,21 +40,28 @@ class Task(db.Model):
 
     project_id = db.Column(
         db.Integer,
-        db.ForeignKey("projects.id"),
+        db.ForeignKey(
+            "projects.id"
+        ),
         nullable=False
     )
 
     def to_dict(self):
+
         return {
             "id": self.id,
-            "task_name": self.task_name,
-            "description": self.description,
-            "status": self.status,
-            "priority": self.priority,
+            "task_name":
+                self.task_name,
+            "description":
+                self.description,
+            "status":
+                self.status,
+            "priority":
+                self.priority,
             "due_date":
-                str(self.due_date)
-                if self.due_date
-                else None,
-            "completed": self.completed,
-            "project_id": self.project_id
+                self.due_date,
+            "completed":
+                self.completed,
+            "project_id":
+                self.project_id
         }

@@ -8,7 +8,7 @@ function Tasks() {
 
   const [showModal, setShowModal] =
     useState(false);
-
+  
   const [editingTask, setEditingTask] =
     useState(null);
 
@@ -23,6 +23,18 @@ function Tasks() {
 
   const [projectId, setProjectId] =
     useState("");
+  
+  const [priority,
+  setPriority] =
+  useState("Medium");
+
+  const [dueDate,
+  setDueDate] =
+  useState("");
+
+  const [search,
+  setSearch] =
+  useState("");
 
   useEffect(() => {
     loadTasks();
@@ -67,16 +79,24 @@ function Tasks() {
     async () => {
       try {
         await api.post(
-          "/tasks",
-          {
-            task_name:
-              taskName,
-            description,
-            status,
-            project_id:
-              Number(projectId),
-          }
-        );
+        "/tasks",
+      {
+        task_name:
+          taskName,
+
+        description,
+
+        status,
+
+      priority,
+
+      due_date:
+        dueDate,
+
+      project_id:
+        Number(projectId),
+      }
+);
 
         clearForm();
         loadTasks();
@@ -95,6 +115,9 @@ function Tasks() {
               taskName,
             description,
             status,
+            priority,
+            due_date:
+              dueDate,
           }
         );
 
@@ -135,6 +158,15 @@ function Tasks() {
       task.status
     );
 
+    setPriority(
+      task.priority ||
+        "Medium"
+    );
+
+    setDueDate(
+      task.due_date || ""
+    );
+
     setProjectId(
       task.project_id
     );
@@ -145,36 +177,67 @@ function Tasks() {
   const clearForm = () => {
     setTaskName("");
     setDescription("");
-    setStatus("Todo");
+    setPriority("Medium");
+    setDueDate("");
     setProjectId("");
     setEditingTask(null);
     setShowModal(false);
   };
 
+  const filteredTasks =
+  tasks.filter(
+    (task) =>
+      task.task_name
+        ?.toLowerCase()
+        .includes(
+          search.toLowerCase()
+        )
+  );
+
   const todo =
-    tasks.filter(
+    filteredTasks.filter(
       (task) =>
         task.status ===
         "Todo"
     );
 
   const progress =
-    tasks.filter(
+    filteredTasks.filter(
       (task) =>
         task.status ===
         "In Progress"
     );
 
   const completed =
-    tasks.filter(
+    filteredTasks.filter(
       (task) =>
         task.status ===
         "Completed"
-    );
-
+      );
   return (
     <MainLayout>
       {/* HEADER */}
+
+      <input
+  placeholder="🔍 Search Tasks"
+  value={search}
+  onChange={(e) =>
+    setSearch(
+      e.target.value
+    )
+  }
+  style={{
+    width: "100%",
+    padding: "18px",
+    border:
+      "1px solid #E2E8F0",
+    borderRadius:
+      "18px",
+    marginBottom:
+      "35px",
+    fontSize: "15px",
+  }}
+/>
 
       <div
         style={{
@@ -256,129 +319,179 @@ function Tasks() {
         />
       </div>
 
-      {/* MODAL */}
+{/* MODAL */}
 
-      {showModal && (
-        <div
-          style={overlay}
+{showModal && (
+  <div style={overlay}>
+    <div style={modal}>
+      <h2
+        style={{
+          marginBottom: "30px",
+        }}
+      >
+        {editingTask
+          ? "Update Task"
+          : "Create Task"}
+      </h2>
+
+      <input
+        placeholder="Task Name"
+        value={taskName}
+        onChange={(e) =>
+          setTaskName(
+            e.target.value
+          )
+        }
+        style={inputStyle}
+      />
+
+      <textarea
+        placeholder="Description"
+        value={description}
+        onChange={(e) =>
+          setDescription(
+            e.target.value
+          )
+        }
+        style={{
+          ...inputStyle,
+          height: "120px",
+        }}
+      />
+
+      <select
+        value={status}
+        onChange={(e) =>
+          setStatus(
+            e.target.value
+          )
+        }
+        style={inputStyle}
+      >
+        <option>
+          Todo
+        </option>
+
+        <option>
+          In Progress
+        </option>
+
+        <option>
+          Completed
+        </option>
+      </select>
+
+      <select
+        value={priority}
+        onChange={(e) =>
+          setPriority(
+            e.target.value
+          )
+        }
+        style={inputStyle}
+      >
+        <option>
+          High
+        </option>
+
+        <option>
+          Medium
+        </option>
+
+        <option>
+          Low
+        </option>
+      </select>
+
+      <input
+        type="date"
+        value={dueDate}
+        onChange={(e) =>
+          setDueDate(
+            e.target.value
+          )
+        }
+        style={inputStyle}
+      />
+
+      {!editingTask && (
+        <select
+          value={projectId}
+          onChange={(e) =>
+            setProjectId(
+              e.target.value
+            )
+          }
+          style={inputStyle}
         >
-          <div
-            style={modal}
-          >
-            <h2>
-              {editingTask
-                ? "Update Task"
-                : "Create Task"}
-            </h2>
+          <option value="">
+            Select Project
+          </option>
 
-            <input
-              placeholder="Task Name"
-              value={taskName}
-              onChange={(e) =>
-                setTaskName(
-                  e.target.value
-                )
-              }
-              style={inputStyle}
-            />
-
-            <textarea
-              placeholder="Description"
-              value={
-                description
-              }
-              onChange={(e) =>
-                setDescription(
-                  e.target.value
-                )
-              }
-              style={{
-                ...inputStyle,
-                height:
-                  "120px",
-              }}
-            />
-
-            <select
-              value={status}
-              onChange={(e) =>
-                setStatus(
-                  e.target.value
-                )
-              }
-              style={inputStyle}
-            >
-              <option>
-                Todo
-              </option>
-
-              <option>
-                In Progress
-              </option>
-
-              <option>
-                Completed
-              </option>
-            </select>
-
-            {!editingTask && (
-              <select
+          {projects.map(
+            (project) => (
+              <option
+                key={
+                  project.id
+                }
                 value={
-                  projectId
-                }
-                onChange={(e) =>
-                  setProjectId(
-                    e.target
-                      .value
-                  )
-                }
-                style={
-                  inputStyle
+                  project.id
                 }
               >
-                <option value="">
-                  Select
-                  Project
-                </option>
-
-                {projects.map(
-                  (
-                    project
-                  ) => (
-                    <option
-                      key={
-                        project.id
-                      }
-                      value={
-                        project.id
-                      }
-                    >
-                      {
-                        project.title
-                      }
-                    </option>
-                  )
-                )}
-              </select>
-            )}
-
-            <button
-              onClick={() =>
-                editingTask
-                  ? updateTask()
-                  : createTask()
-              }
-              style={
-                buttonStyle
-              }
-            >
-              {editingTask
-                ? "Update Task"
-                : "Create Task"}
-            </button>
-          </div>
-        </div>
+                {
+                  project.title
+                }
+              </option>
+            )
+          )}
+        </select>
       )}
+
+      <div
+        style={{
+          display: "flex",
+          justifyContent:
+            "flex-end",
+          gap: "15px",
+          marginTop: "20px",
+        }}
+      >
+        <button
+          onClick={
+            clearForm
+          }
+          style={{
+            padding:
+              "15px 25px",
+            border:
+              "1px solid #E2E8F0",
+            background:
+              "white",
+            borderRadius:
+              "14px",
+            cursor:
+              "pointer",
+          }}
+        >
+          Cancel
+        </button>
+
+        <button
+          onClick={() =>
+            editingTask
+              ? updateTask()
+              : createTask()
+          }
+          style={buttonStyle}
+        >
+          {editingTask
+            ? "Update Task"
+            : "Create Task"}
+        </button>
+      </div>
+    </div>
+  </div>
+)}
     </MainLayout>
   );
 }
@@ -449,6 +562,68 @@ function TaskColumn({
               {
                 task.description
               }
+            <div
+  style={{
+    display: "flex",
+    gap: "10px",
+    flexWrap: "wrap",
+    marginTop: "20px",
+  }}
+>
+  <span
+    style={{
+      background:
+        task.priority ===
+        "High"
+          ? "#FEE2E2"
+          : task.priority ===
+            "Medium"
+          ? "#FEF3C7"
+          : "#DCFCE7",
+
+      color:
+        task.priority ===
+        "High"
+          ? "#DC2626"
+          : task.priority ===
+            "Medium"
+          ? "#D97706"
+          : "#16A34A",
+
+      padding:
+        "6px 14px",
+      borderRadius:
+        "30px",
+      fontSize:
+        "13px",
+      fontWeight:
+        "600",
+    }}
+  >
+    {task.priority}
+  </span>
+
+  {task.due_date && (
+    <span
+      style={{
+        background:
+          "#EFF6FF",
+        color:
+          "#2563EB",
+        padding:
+          "6px 14px",
+        borderRadius:
+          "30px",
+        fontSize:
+          "13px",
+        fontWeight:
+          "600",
+      }}
+    >
+      📅 {task.due_date}
+    </span>
+  )}
+</div>
             </p>
 
             <div
