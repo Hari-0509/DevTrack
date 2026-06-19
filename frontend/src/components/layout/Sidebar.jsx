@@ -4,137 +4,301 @@ import {
   CheckSquare,
   BarChart3,
   Settings,
-  LogOut
+  LogOut,
+  User,
 } from "lucide-react";
 
 import {
   Link,
-  useLocation
+  useLocation,
+  useNavigate,
 } from "react-router-dom";
 
 function Sidebar() {
   const location =
     useLocation();
 
+  const navigate =
+    useNavigate();
+
   const menu = [
     {
       title: "Dashboard",
       icon: LayoutDashboard,
-      path: "/"
+      path: "/",
     },
     {
       title: "Projects",
       icon: FolderKanban,
-      path: "/projects"
+      path: "/projects",
     },
     {
       title: "Tasks",
       icon: CheckSquare,
-      path: "/tasks"
+      path: "/tasks",
     },
     {
       title: "Analytics",
       icon: BarChart3,
-      path: "/analytics"
+      path: "/analytics",
     },
     {
       title: "Settings",
       icon: Settings,
-      path: "/settings"
-    }
+      path: "/settings",
+    },
   ];
+
+  const handleLogout =
+    () => {
+      localStorage.removeItem(
+        "token"
+      );
+
+      navigate("/login");
+    };
 
   return (
     <div
       style={{
         width: "280px",
-        background: "#ffffff",
+        background:
+          "#ffffff",
         borderRight:
-          "1px solid #e2e8f0",
-        minHeight: "100vh",
-        padding: "40px 25px"
+          "1px solid #E2E8F0",
+        minHeight:
+          "100vh",
+        padding:
+          "35px 25px",
+        display: "flex",
+        flexDirection:
+          "column",
+        justifyContent:
+          "space-between",
+        boxSizing:
+          "border-box",
       }}
     >
-      <h1
-        style={{
-          color: "#2563EB",
-          marginBottom: "50px"
-        }}
-      >
-        DevTrack
-      </h1>
+      {/* TOP */}
 
-      <div
-        style={{
-          display: "flex",
-          flexDirection:
-            "column",
-          gap: "10px"
-        }}
-      >
-        {menu.map((item) => {
+      <div>
+        {/* LOGO */}
 
-          const Icon =
-            item.icon;
+        <div
+          style={{
+            marginBottom:
+              "50px",
+          }}
+        >
+          <h1
+            style={{
+              color:
+                "#2563EB",
+              fontSize:
+                "32px",
+              fontWeight:
+                "800",
+              margin: 0,
+            }}
+          >
+            DevTrack
+          </h1>
 
-          const active =
-            location.pathname ===
-            item.path;
+          <p
+            style={{
+              color:
+                "#94A3B8",
+              marginTop:
+                "8px",
+            }}
+          >
+            Project Workspace
+          </p>
+        </div>
 
-          return (
-            <Link
-              key={item.path}
-              to={item.path}
-              style={{
-                display: "flex",
-                alignItems:
-                  "center",
-                gap: "15px",
-                padding:
-                  "15px 20px",
-                borderRadius:
-                  "14px",
-                background:
-                  active
-                    ? "#EFF6FF"
-                    : "transparent",
-                color:
-                  active
-                    ? "#2563EB"
-                    : "#64748B",
-                fontWeight: 600
-              }}
-            >
-              <Icon size={20} />
-              {item.title}
-            </Link>
-          );
-        })}
+        {/* MENU */}
+
+        <div
+          style={{
+            display: "flex",
+            flexDirection:
+              "column",
+            gap: "12px",
+          }}
+        >
+          {menu.map(
+            (item) => {
+              const Icon =
+                item.icon;
+
+              const active =
+                location.pathname ===
+                item.path;
+
+              return (
+                <Link
+                  key={
+                    item.path
+                  }
+                  to={
+                    item.path
+                  }
+                  style={{
+                    display:
+                      "flex",
+                    alignItems:
+                      "center",
+                    gap: "15px",
+                    padding:
+                      "15px 20px",
+                    borderRadius:
+                      "16px",
+                    textDecoration:
+                      "none",
+
+                    background:
+                      active
+                        ? "#EFF6FF"
+                        : "transparent",
+
+                    color:
+                      active
+                        ? "#2563EB"
+                        : "#64748B",
+
+                    fontWeight:
+                      "600",
+
+                    transition:
+                      "all 0.3s ease",
+
+                    boxShadow:
+                      active
+                        ? "0 8px 20px rgba(37,99,235,0.12)"
+                        : "none",
+                  }}
+                >
+                  <Icon
+                    size={
+                      20
+                    }
+                  />
+
+                  {
+                    item.title
+                  }
+                </Link>
+              );
+            }
+          )}
+        </div>
       </div>
 
-      <div
-        style={{
-          marginTop: "80px"
-        }}
-      >
+      {/* BOTTOM */}
+
+      <div>
+        {/* USER CARD */}
+
+        <div
+          style={{
+            background:
+              "#F8FAFC",
+            border:
+              "1px solid #E2E8F0",
+            borderRadius:
+              "20px",
+            padding:
+              "18px",
+            display: "flex",
+            alignItems:
+              "center",
+            gap: "15px",
+            marginBottom:
+              "20px",
+          }}
+        >
+          <div
+            style={{
+              width: "50px",
+              height:
+                "50px",
+              borderRadius:
+                "50%",
+              background:
+                "#2563EB",
+              display: "flex",
+              justifyContent:
+                "center",
+              alignItems:
+                "center",
+              color:
+                "white",
+            }}
+          >
+            <User
+              size={24}
+            />
+          </div>
+
+          <div>
+            <h4
+              style={{
+                margin: 0,
+              }}
+            >
+              DevTrack User
+            </h4>
+
+            <p
+              style={{
+                margin:
+                  "4px 0 0",
+                color:
+                  "#64748B",
+                fontSize:
+                  "14px",
+              }}
+            >
+              Welcome back 👋
+            </p>
+          </div>
+        </div>
+
+        {/* LOGOUT */}
+
         <button
+          onClick={
+            handleLogout
+          }
           style={{
             width: "100%",
             background:
               "#ffffff",
             border:
-              "1px solid #e2e8f0",
-            padding: "15px",
+              "1px solid #E2E8F0",
+            padding:
+              "16px",
             borderRadius:
-              "14px",
-            cursor: "pointer",
+              "16px",
+            cursor:
+              "pointer",
             display: "flex",
-            gap: "15px",
             alignItems:
-              "center"
+              "center",
+            justifyContent:
+              "center",
+            gap: "12px",
+            fontSize:
+              "15px",
+            fontWeight:
+              "600",
+            transition:
+              "all 0.3s ease",
           }}
         >
-          <LogOut />
+          <LogOut
+            size={20}
+          />
           Logout
         </button>
       </div>

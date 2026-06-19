@@ -9,6 +9,7 @@ import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import Projects from "./pages/Projects";
 import Tasks from "./pages/Tasks";
+import Analytics from "./pages/Analytics";
 
 function App() {
   const token =
@@ -64,6 +65,12 @@ function App() {
               to="/login"
             />
           )
+        }
+      />
+      <Route
+        path="/analytics"
+        element={
+          <Analytics />
         }
       />
     </Routes>
