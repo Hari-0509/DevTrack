@@ -127,57 +127,59 @@ def get_tasks():
 @jwt_required()
 def update_task(task_id):
 
+    current_user = int(
+        get_jwt_identity()
+    )
+
+    task = (
+        Task.query.join(Project)
+        .filter(
+            Task.id == task_id,
+            Project.user_id
+            == current_user
+        )
+        .first()
+    )
+
+    if not task:
+        return {
+            "message":
+                "Task not found"
+        }, 404
+
     data = request.get_json()
 
     task.task_name = data.get(
-    "task_name",
-    task.task_name
+        "task_name",
+        task.task_name
     )
 
     task.description = data.get(
-    "description",
-    task.description
+        "description",
+        task.description
     )
 
     task.status = data.get(
-    "status",
-    task.status
+        "status",
+        task.status
     )
 
     task.priority = data.get(
-    "priority",
-    task.priority
+        "priority",
+        task.priority
     )
 
     task.due_date = data.get(
-    "due_date",
-    task.due_date
-    )
-
-    if data.get(
-    "due_date"
-    ):
-        task.due_date = (
-        datetime.strptime(
-            data.get(
-                "due_date"
-            ),
-            "%Y-%m-%d"
-        ).date()
-    )
-
-    task.completed = data.get(
-    "completed",
-    task.completed
+        "due_date",
+        task.due_date
     )
 
     db.session.commit()
 
     return {
-    "message":
-        "Task updated successfully"
+        "message":
+            "Task updated successfully"
     }
-
 
 # ==========================================
 # DELETE TASK

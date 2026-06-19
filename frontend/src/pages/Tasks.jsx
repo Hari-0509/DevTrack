@@ -214,6 +214,26 @@ function Tasks() {
         task.status ===
         "Completed"
       );
+
+  const moveTask = async (
+    taskId,
+    newStatus
+  ) => {
+    try {
+      await api.put(
+        `/tasks/${taskId}`,
+        {
+          status: newStatus,
+        }
+      );
+
+      loadTasks();
+
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <MainLayout>
       {/* HEADER */}
@@ -298,6 +318,7 @@ function Tasks() {
           onDelete={
             deleteTask
           }
+          onMove={moveTask}
         />
 
         <TaskColumn
@@ -307,6 +328,7 @@ function Tasks() {
           onDelete={
             deleteTask
           }
+          onMove={moveTask}
         />
 
         <TaskColumn
@@ -316,6 +338,7 @@ function Tasks() {
           onDelete={
             deleteTask
           }
+          onMove={moveTask}
         />
       </div>
 
@@ -501,6 +524,7 @@ function TaskColumn({
   tasks,
   onEdit,
   onDelete,
+  onMove,
 }) {
   return (
     <div
@@ -628,39 +652,77 @@ function TaskColumn({
 
             <div
               style={{
-                display:
-                  "flex",
+                display: "flex",
                 gap: "10px",
-                marginTop:
-                  "20px",
-              }}
+                flexWrap: "wrap",
+                marginTop: "20px",
+            }}
             >
-              <button
-                onClick={() =>
-                  onEdit(
-                    task
-                  )
-                }
-                style={
-                  editButton
-                }
-              >
-                Edit
-              </button>
+              {task.status ===
+                "Todo" && (
+                <button
+                  onClick={() =>
+                    onMove(
+                    task.id,
+                    "In Progress"
+                    )
+                  }
+                  style={moveButton}
+                >
+                  Start
+                </button>
+             )}
 
-              <button
-                onClick={() =>
-                  onDelete(
-                    task.id
-                  )
-                }
-                style={
-                  deleteButton
-                }
-              >
-                Delete
+              {task.status ===
+                "In Progress" && (
+                <button
+                  onClick={() =>
+                    onMove(
+                      task.id,
+                      "Completed"
+                    )
+                  }
+                  style={moveButton}
+                >
+                Complete
               </button>
-            </div>
+          )}
+
+          {task.status ===
+            "Completed" && (
+            <button
+              onClick={() =>
+                onMove(
+                  task.id,
+                  "Todo"
+                )
+              }
+              style={moveButton}
+            >
+              Reopen
+            </button>
+          )}
+            
+  <button
+    onClick={() =>
+      onEdit(task)
+    }
+    style={editButton}
+  >
+    Edit
+  </button>
+
+  <button
+    onClick={() =>
+      onDelete(
+        task.id
+      )
+    }
+    style={deleteButton}
+  >
+    Delete
+  </button>
+</div>
           </div>
         )
       )}
@@ -738,6 +800,16 @@ const modal = {
   background: "white",
   padding: "40px",
   borderRadius: "30px",
+};
+
+const moveButton = {
+  background: "#DCFCE7",
+  color: "#16A34A",
+  border: "none",
+  padding: "10px 16px",
+  borderRadius: "12px",
+  cursor: "pointer",
+  fontWeight: "600",
 };
 
 export default Tasks;
