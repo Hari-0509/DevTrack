@@ -14,10 +14,11 @@ dashboard = Blueprint(
 
 
 @dashboard.route(
-    "/dashboard/stats"
+    "/dashboard",
+    methods=["GET"]
 )
 @jwt_required()
-def get_stats():
+def get_dashboard():
 
     current_user = int(
         get_jwt_identity()
@@ -28,8 +29,8 @@ def get_stats():
     ).all()
 
     project_ids = [
-        p.id
-        for p in projects
+        project.id
+        for project in projects
     ]
 
     tasks = Task.query.filter(
@@ -37,6 +38,21 @@ def get_stats():
             project_ids
         )
     ).all()
+
+    total_tasks = len(tasks)
+
+    todo = len([
+        task
+        for task in tasks
+        if task.status == "Todo"
+    ])
+
+    progress = len([
+        task
+        for task in tasks
+        if task.status ==
+        "In Progress"
+    ])
 
     completed = len([
         task
@@ -45,73 +61,56 @@ def get_stats():
         "Completed"
     ])
 
-    pending = (
-        len(tasks)
-        - completed
+    high = len([
+        task
+        for task in tasks
+        if task.priority ==
+        "High"
+    ])
+
+    medium = len([
+        task
+        for task in tasks
+        if task.priority ==
+        "Medium"
+    ])
+
+    low = len([
+        task
+        for task in tasks
+        if task.priority ==
+        "Low"
+    ])
+
+    productivity = (
+        round(
+            (
+                completed
+                / total_tasks
+            ) * 100,
+            1
+        )
+        if total_tasks > 0
+        else 0
     )
+
+    upcoming = sorted(
+        [
+            task.to_dict()
+            for task in tasks
+            if task.due_date
+        ],
+        key=lambda x:
+            x["due_date"]
+    )[:5]
 
     return {
         "projects":
             len(projects),
 
         "tasks":
-            len(tasks),
+            total_tasks,
 
-        "completed":
-            completed,
-
-        "pending":
-            pending
-    }
-
-
-@dashboard.route(
-    "/dashboard/charts"
-)
-@jwt_required()
-def get_charts():
-
-    current_user = int(
-        get_jwt_identity()
-    )
-
-    projects = Project.query.filter_by(
-        user_id=current_user
-    ).all()
-
-    project_ids = [
-        p.id
-        for p in projects
-    ]
-
-    tasks = Task.query.filter(
-        Task.project_id.in_(
-            project_ids
-        )
-    ).all()
-
-    todo = len([
-        t
-        for t in tasks
-        if t.status ==
-        "Todo"
-    ])
-
-    progress = len([
-        t
-        for t in tasks
-        if t.status ==
-        "In Progress"
-    ])
-
-    completed = len([
-        t
-        for t in tasks
-        if t.status ==
-        "Completed"
-    ])
-
-    return {
         "todo":
             todo,
 
@@ -119,5 +118,20 @@ def get_charts():
             progress,
 
         "completed":
-            completed
+            completed,
+
+        "high":
+            high,
+
+        "medium":
+            medium,
+
+        "low":
+            low,
+
+        "productivity":
+            productivity,
+
+        "upcoming":
+            upcoming
     }

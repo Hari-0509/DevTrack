@@ -2,6 +2,42 @@ import { useEffect, useState } from "react";
 import MainLayout from "../layouts/MainLayout";
 import api from "../services/api";
 
+import {
+  Chart as ChartJS,
+  ArcElement,
+  Tooltip,
+  Legend,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+} from "chart.js";
+
+import {
+  Doughnut,
+  Pie,
+  Line,
+} from "react-chartjs-2";
+
+import {
+  FolderKanban,
+  CheckSquare,
+  CheckCircle,
+  TrendingUp,
+  Calendar,
+  Clock,
+} from "lucide-react";
+
+ChartJS.register(
+  ArcElement,
+  Tooltip,
+  Legend,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement
+);
+
 function Analytics() {
   const [analytics, setAnalytics] =
     useState({
@@ -37,6 +73,75 @@ function Analytics() {
       }
     };
 
+  const statusData = {
+    labels: [
+      "Todo",
+      "In Progress",
+      "Completed",
+    ],
+    datasets: [
+      {
+        data: [
+          analytics.todo,
+          analytics.progress,
+          analytics.completed,
+        ],
+        backgroundColor: [
+          "#EF4444",
+          "#F59E0B",
+          "#10B981",
+        ],
+        borderWidth: 0,
+      },
+    ],
+  };
+
+  const priorityData = {
+    labels: [
+      "High",
+      "Medium",
+      "Low",
+    ],
+    datasets: [
+      {
+        data: [
+          analytics.high,
+          analytics.medium,
+          analytics.low,
+        ],
+        backgroundColor: [
+          "#DC2626",
+          "#F59E0B",
+          "#16A34A",
+        ],
+        borderWidth: 0,
+      },
+    ],
+  };
+
+  const trendData = {
+    labels: [
+      "Todo",
+      "Progress",
+      "Completed",
+    ],
+    datasets: [
+      {
+        label: "Tasks",
+        data: [
+          analytics.todo,
+          analytics.progress,
+          analytics.completed,
+        ],
+        borderColor:
+          "#2563EB",
+        backgroundColor:
+          "#2563EB",
+        tension: 0.4,
+      },
+    ],
+  };
+
   return (
     <MainLayout>
       <h1
@@ -48,7 +153,7 @@ function Analytics() {
         Analytics
       </h1>
 
-      {/* KPI CARDS */}
+      {/* KPI */}
 
       <div
         style={{
@@ -56,141 +161,181 @@ function Analytics() {
           gridTemplateColumns:
             "repeat(auto-fit,minmax(250px,1fr))",
           gap: "25px",
-          marginBottom: "50px",
+          marginBottom: "40px",
         }}
       >
-        <Card
+        <StatCard
+          icon={
+            <FolderKanban
+              size={30}
+            />
+          }
           title="Projects"
           value={
             analytics.projects
           }
+          subtitle="Active Projects"
         />
 
-        <Card
+        <StatCard
+          icon={
+            <CheckSquare
+              size={30}
+            />
+          }
           title="Tasks"
           value={
             analytics.tasks
           }
+          subtitle="Total Tasks"
         />
 
-        <Card
+        <StatCard
+          icon={
+            <CheckCircle
+              size={30}
+            />
+          }
           title="Completed"
           value={
             analytics.completed
           }
+          subtitle="Finished Tasks"
         />
 
-        <Card
+        <StatCard
+          icon={
+            <TrendingUp
+              size={30}
+            />
+          }
           title="Productivity"
           value={`${analytics.productivity}%`}
+          subtitle="Efficiency"
         />
       </div>
 
-      {/* STATUS */}
+      {/* CHARTS */}
 
       <div
         style={{
-          background:
-            "white",
-          padding: "35px",
-          borderRadius:
-            "25px",
-          marginBottom:
-            "35px",
-          boxShadow:
-            "0 10px 30px rgba(0,0,0,0.05)",
+          display: "grid",
+          gridTemplateColumns:
+            "repeat(auto-fit,minmax(450px,1fr))",
+          gap: "30px",
+          marginBottom: "40px",
         }}
       >
-        <h2>
-          Task Status
-        </h2>
+        <Card title="Task Status">
+          <div
+            style={{
+              width: "280px",
+              height: "280px",
+              margin: "0 auto",
+            }}
+          >
+            <Doughnut
+              data={
+                statusData
+              }
+              options={{
+                maintainAspectRatio:
+                  false,
+              }}
+            />
+          </div>
+        </Card>
 
-        <p>
-          Todo:
-          {" "}
-          {
-            analytics.todo
-          }
-        </p>
-
-        <p>
-          In Progress:
-          {" "}
-          {
-            analytics.progress
-          }
-        </p>
-
-        <p>
-          Completed:
-          {" "}
-          {
-            analytics.completed
-          }
-        </p>
+        <Card title="Priority Distribution">
+          <div
+            style={{
+              width: "280px",
+              height: "280px",
+              margin: "0 auto",
+            }}
+          >
+            <Pie
+              data={
+                priorityData
+              }
+              options={{
+                maintainAspectRatio:
+                  false,
+              }}
+            />
+          </div>
+        </Card>
       </div>
 
-      {/* PRIORITY */}
+      {/* PRODUCTIVITY */}
 
-      <div
-        style={{
-          background:
-            "white",
-          padding: "35px",
-          borderRadius:
-            "25px",
-          marginBottom:
-            "35px",
-          boxShadow:
-            "0 10px 30px rgba(0,0,0,0.05)",
-        }}
-      >
-        <h2>
-          Priority
+      <Card title="Task Flow">
+        <div
+          style={{
+            height: "320px",
+          }}
+        >
+          <Line
+            data={trendData}
+            options={{
+              maintainAspectRatio:
+                false,
+            }}
+          />
+        </div>
+      </Card>
+
+      <br />
+
+      {/* PRODUCTIVITY BAR */}
+
+      <Card title="Overall Productivity">
+        <div
+          style={{
+            background:
+              "#E2E8F0",
+            height: "20px",
+            borderRadius:
+              "30px",
+            overflow:
+              "hidden",
+            marginTop:
+              "20px",
+          }}
+        >
+          <div
+            style={{
+              width:
+                `${analytics.productivity}%`,
+              height:
+                "100%",
+              background:
+                "#2563EB",
+              borderRadius:
+                "30px",
+            }}
+          />
+        </div>
+
+        <h2
+          style={{
+            marginTop:
+              "20px",
+          }}
+        >
+          {
+            analytics.productivity
+          }
+          %
+          Completed
         </h2>
+      </Card>
 
-        <p>
-          🔴 High:
-          {" "}
-          {
-            analytics.high
-          }
-        </p>
-
-        <p>
-          🟡 Medium:
-          {" "}
-          {
-            analytics.medium
-          }
-        </p>
-
-        <p>
-          🟢 Low:
-          {" "}
-          {
-            analytics.low
-          }
-        </p>
-      </div>
+      <br />
 
       {/* UPCOMING */}
 
-      <div
-        style={{
-          background:
-            "white",
-          padding: "35px",
-          borderRadius:
-            "25px",
-          boxShadow:
-            "0 10px 30px rgba(0,0,0,0.05)",
-        }}
-      >
-        <h2>
-          Upcoming Deadlines
-        </h2>
-
+      <Card title="Upcoming Deadlines">
         {analytics.upcoming
           .length ===
         0 ? (
@@ -208,71 +353,199 @@ function Analytics() {
                 style={{
                   border:
                     "1px solid #E2E8F0",
-                  padding:
-                    "20px",
                   borderRadius:
                     "18px",
-                  marginTop:
+                  padding:
+                    "20px",
+                  marginBottom:
                     "15px",
+                  display:
+                    "flex",
+                  justifyContent:
+                    "space-between",
+                  alignItems:
+                    "center",
                 }}
               >
-                <h3>
-                  {
-                    task.task_name
-                  }
-                </h3>
+                <div>
+                  <h3>
+                    {
+                      task.task_name
+                    }
+                  </h3>
 
-                <p>
-                  📅
-                  {" "}
+                  <p
+                    style={{
+                      color:
+                        "#64748B",
+                    }}
+                  >
+                    {
+                      task.description
+                    }
+                  </p>
+                </div>
+
+                <div
+                  style={{
+                    display:
+                      "flex",
+                    alignItems:
+                      "center",
+                    gap: "8px",
+                    color:
+                      "#2563EB",
+                  }}
+                >
+                  <Calendar
+                    size={18}
+                  />
                   {
                     task.due_date
                   }
-                </p>
+                </div>
               </div>
             )
           )
         )}
-      </div>
+      </Card>
+
+      <br />
+
+      {/* RECENT ACTIVITY */}
+
+      <Card title="Recent Activity">
+        <Activity
+          icon="📁"
+          text={`${analytics.projects} active projects`}
+        />
+
+        <Activity
+          icon="📝"
+          text={`${analytics.tasks} total tasks`}
+        />
+
+        <Activity
+          icon="⏳"
+          text={`${analytics.progress} tasks in progress`}
+        />
+
+        <Activity
+          icon="✅"
+          text={`${analytics.completed} tasks completed`}
+        />
+      </Card>
     </MainLayout>
   );
 }
 
-function Card({
+function StatCard({
+  icon,
   title,
   value,
+  subtitle,
 }) {
   return (
     <div
       style={{
         background:
           "white",
-        padding: "35px",
         borderRadius:
-          "25px",
+          "24px",
+        padding:
+          "35px",
         boxShadow:
           "0 10px 30px rgba(0,0,0,0.05)",
       }}
     >
+      <div
+        style={{
+          color:
+            "#2563EB",
+        }}
+      >
+        {icon}
+      </div>
+
+      <h1
+        style={{
+          fontSize:
+            "45px",
+          margin:
+            "20px 0 5px",
+        }}
+      >
+        {value}
+      </h1>
+
+      <h3>{title}</h3>
+
       <p
         style={{
           color:
             "#64748B",
         }}
       >
-        {title}
+        {subtitle}
       </p>
+    </div>
+  );
+}
 
-      <h1
+function Card({
+  title,
+  children,
+}) {
+  return (
+    <div
+      style={{
+        background:
+          "white",
+        borderRadius:
+          "24px",
+        padding:
+          "35px",
+        boxShadow:
+          "0 10px 30px rgba(0,0,0,0.05)",
+      }}
+    >
+      <h2
         style={{
-          fontSize:
-            "45px",
-          marginTop:
-            "20px",
+          marginBottom:
+            "30px",
         }}
       >
-        {value}
-      </h1>
+        {title}
+      </h2>
+
+      {children}
+    </div>
+  );
+}
+
+function Activity({
+  icon,
+  text,
+}) {
+  return (
+    <div
+      style={{
+        display:
+          "flex",
+        gap: "15px",
+        alignItems:
+          "center",
+        marginBottom:
+          "20px",
+      }}
+    >
+      <Clock size={18} />
+
+      <span>
+        {icon}
+        {" "}
+        {text}
+      </span>
     </div>
   );
 }
