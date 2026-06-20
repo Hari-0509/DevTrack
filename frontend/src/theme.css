@@ -1,0 +1,50 @@
+/* Light mode */
+body {
+  margin: 0;
+  background: #f8fafc;
+  transition: background 0.3s ease;
+}
+
+/* Dark mode */
+body.dark {
+  background: #0f172a;
+}
+
+/* Inputs */
+body.dark input,
+body.dark textarea,
+body.dark select {
+  background: #1e293b;
+  color: #f8fafc;
+  border: 1px solid #334155;
+}
+
+/* Placeholder text */
+body.dark input::placeholder,
+body.dark textarea::placeholder {
+  color: #94a3b8;
+}
+
+/* Scrollbar */
+body.dark::-webkit-scrollbar {
+  width: 10px;
+}
+
+body.dark::-webkit-scrollbar-track {
+  background: #0f172a;
+}
+
+body.dark::-webkit-scrollbar-thumb {
+  background: #334155;
+  border-radius: 10px;
+}
+
+body.dark::-webkit-scrollbar-thumb:hover {
+  background: #475569;
+}
+
+/* Text selection */
+body.dark ::selection {
+  background: #2563eb;
+  color: white;
+}

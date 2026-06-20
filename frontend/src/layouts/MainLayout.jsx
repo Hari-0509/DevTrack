@@ -1,15 +1,35 @@
+import {
+  useContext,
+} from "react";
+
+import {
+  ThemeContext,
+} from "../App";
+
 import Sidebar from "../components/layout/Sidebar";
 import Navbar from "../components/layout/Navbar";
 
 function MainLayout({
-  children
+  children,
 }) {
+  const {
+    darkMode,
+  } = useContext(
+    ThemeContext
+  );
+
   return (
     <div
       style={{
         display: "flex",
         background:
-          "#F8FAFC"
+          darkMode
+            ? "#0F172A"
+            : "#F8FAFC",
+        minHeight:
+          "100vh",
+        transition:
+          "0.3s",
       }}
     >
       <Sidebar />
@@ -17,14 +37,16 @@ function MainLayout({
       <div
         style={{
           flex: 1,
-          padding: "30px"
+          padding:
+            "30px",
         }}
       >
         <Navbar />
 
         <div
           style={{
-            marginTop: "30px"
+            marginTop:
+              "30px",
           }}
         >
           {children}

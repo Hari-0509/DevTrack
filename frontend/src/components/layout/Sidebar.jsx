@@ -14,7 +14,21 @@ import {
   useNavigate,
 } from "react-router-dom";
 
+import {
+  useContext,
+} from "react";
+
+import {
+  ThemeContext,
+} from "../../App";
+
 function Sidebar() {
+  const {
+    darkMode,
+  } = useContext(
+    ThemeContext
+  );
+
   const location =
     useLocation();
 
@@ -23,29 +37,43 @@ function Sidebar() {
 
   const menu = [
     {
-      title: "Dashboard",
-      icon: LayoutDashboard,
+      title:
+        "Dashboard",
+      icon:
+        LayoutDashboard,
       path: "/",
     },
     {
-      title: "Projects",
-      icon: FolderKanban,
-      path: "/projects",
+      title:
+        "Projects",
+      icon:
+        FolderKanban,
+      path:
+        "/projects",
     },
     {
-      title: "Tasks",
-      icon: CheckSquare,
-      path: "/tasks",
+      title:
+        "Tasks",
+      icon:
+        CheckSquare,
+      path:
+        "/tasks",
     },
     {
-      title: "Analytics",
-      icon: BarChart3,
-      path: "/analytics",
+      title:
+        "Analytics",
+      icon:
+        BarChart3,
+      path:
+        "/analytics",
     },
     {
-      title: "Settings",
-      icon: Settings,
-      path: "/settings",
+      title:
+        "Settings",
+      icon:
+        Settings,
+      path:
+        "/settings",
     },
   ];
 
@@ -55,7 +83,9 @@ function Sidebar() {
         "token"
       );
 
-      navigate("/login");
+      navigate(
+        "/login"
+      );
     };
 
   return (
@@ -63,27 +93,26 @@ function Sidebar() {
       style={{
         width: "280px",
         background:
-          "#ffffff",
+          darkMode
+            ? "#1E293B"
+            : "#ffffff",
         borderRight:
-          "1px solid #E2E8F0",
+          darkMode
+            ? "1px solid #334155"
+            : "1px solid #E2E8F0",
         minHeight:
           "100vh",
         padding:
           "35px 25px",
-        display: "flex",
+        display:
+          "flex",
         flexDirection:
           "column",
         justifyContent:
           "space-between",
-        boxSizing:
-          "border-box",
       }}
     >
-      {/* TOP */}
-
       <div>
-        {/* LOGO */}
-
         <div
           style={{
             marginBottom:
@@ -107,27 +136,28 @@ function Sidebar() {
           <p
             style={{
               color:
-                "#94A3B8",
-              marginTop:
-                "8px",
+                darkMode
+                  ? "#CBD5E1"
+                  : "#94A3B8",
             }}
           >
             Project Workspace
           </p>
         </div>
 
-        {/* MENU */}
-
         <div
           style={{
-            display: "flex",
+            display:
+              "flex",
             flexDirection:
               "column",
             gap: "12px",
           }}
         >
           {menu.map(
-            (item) => {
+            (
+              item
+            ) => {
               const Icon =
                 item.icon;
 
@@ -155,27 +185,18 @@ function Sidebar() {
                       "16px",
                     textDecoration:
                       "none",
-
                     background:
                       active
-                        ? "#EFF6FF"
+                        ? "#2563EB"
                         : "transparent",
-
                     color:
                       active
-                        ? "#2563EB"
+                        ? "white"
+                        : darkMode
+                        ? "#CBD5E1"
                         : "#64748B",
-
                     fontWeight:
                       "600",
-
-                    transition:
-                      "all 0.3s ease",
-
-                    boxShadow:
-                      active
-                        ? "0 8px 20px rgba(37,99,235,0.12)"
-                        : "none",
                   }}
                 >
                   <Icon
@@ -183,7 +204,6 @@ function Sidebar() {
                       20
                     }
                   />
-
                   {
                     item.title
                   }
@@ -194,39 +214,42 @@ function Sidebar() {
         </div>
       </div>
 
-      {/* BOTTOM */}
-
       <div>
-        {/* USER CARD */}
-
         <div
           style={{
             background:
-              "#F8FAFC",
+              darkMode
+                ? "#334155"
+                : "#F8FAFC",
             border:
-              "1px solid #E2E8F0",
+              darkMode
+                ? "1px solid #475569"
+                : "1px solid #E2E8F0",
             borderRadius:
               "20px",
             padding:
               "18px",
-            display: "flex",
-            alignItems:
-              "center",
+            display:
+              "flex",
             gap: "15px",
             marginBottom:
               "20px",
+            alignItems:
+              "center",
           }}
         >
           <div
             style={{
-              width: "50px",
+              width:
+                "50px",
               height:
                 "50px",
               borderRadius:
                 "50%",
               background:
                 "#2563EB",
-              display: "flex",
+              display:
+                "flex",
               justifyContent:
                 "center",
               alignItems:
@@ -244,6 +267,10 @@ function Sidebar() {
             <h4
               style={{
                 margin: 0,
+                color:
+                  darkMode
+                    ? "#F8FAFC"
+                    : "#0F172A",
               }}
             >
               DevTrack User
@@ -254,17 +281,15 @@ function Sidebar() {
                 margin:
                   "4px 0 0",
                 color:
-                  "#64748B",
-                fontSize:
-                  "14px",
+                  darkMode
+                    ? "#CBD5E1"
+                    : "#64748B",
               }}
             >
               Welcome back 👋
             </p>
           </div>
         </div>
-
-        {/* LOGOUT */}
 
         <button
           onClick={
@@ -273,27 +298,32 @@ function Sidebar() {
           style={{
             width: "100%",
             background:
-              "#ffffff",
+              darkMode
+                ? "#334155"
+                : "#ffffff",
+            color:
+              darkMode
+                ? "#F8FAFC"
+                : "#0F172A",
             border:
-              "1px solid #E2E8F0",
+              darkMode
+                ? "1px solid #475569"
+                : "1px solid #E2E8F0",
             padding:
               "16px",
             borderRadius:
               "16px",
             cursor:
               "pointer",
-            display: "flex",
-            alignItems:
-              "center",
+            display:
+              "flex",
             justifyContent:
               "center",
+            alignItems:
+              "center",
             gap: "12px",
-            fontSize:
-              "15px",
             fontWeight:
               "600",
-            transition:
-              "all 0.3s ease",
           }}
         >
           <LogOut
