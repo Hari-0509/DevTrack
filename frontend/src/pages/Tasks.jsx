@@ -2,6 +2,15 @@ import { useEffect, useState } from "react";
 import MainLayout from "../layouts/MainLayout";
 import api from "../services/api";
 
+import TaskColumn from "../components/tasks/TaskColumn";
+
+import {
+  DragDropContext,
+  Droppable,
+  Draggable,
+} from "@hello-pangea/dnd";
+
+
 function Tasks() {
   const [tasks, setTasks] = useState([]);
   const [projects, setProjects] = useState([]);
@@ -234,6 +243,49 @@ function Tasks() {
     }
   };
 
+  const onDragEnd =
+  async (result) => {
+
+    if (
+      !result.destination
+    ) {
+      return;
+    }
+
+    const source =
+      result.source
+        .droppableId;
+
+    const destination =
+      result.destination
+        .droppableId;
+
+    if (
+      source ===
+      destination
+    ) {
+      return;
+    }
+
+    try {
+
+      await api.put(
+        `/tasks/${result.draggableId}`,
+        {
+          status:
+            destination,
+        }
+      );
+
+      loadTasks();
+
+    } catch (error) {
+      console.log(
+        error
+      );
+    }
+  };
+
   return (
     <MainLayout>
       {/* HEADER */}
@@ -303,44 +355,49 @@ function Tasks() {
 
       {/* KANBAN */}
 
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns:
-            "repeat(3,1fr)",
-          gap: "25px",
-        }}
-      >
-        <TaskColumn
-          title={`Todo (${todo.length})`}
-          tasks={todo}
-          onEdit={editTask}
-          onDelete={
-            deleteTask
-          }
-          onMove={moveTask}
-        />
+      <DragDropContext
+  onDragEnd={
+    onDragEnd
+  }
+>
+  <div
+    style={{
+      display: "grid",
+      gridTemplateColumns:
+        "repeat(3,1fr)",
+      gap: "25px",
+    }}
+  >
+    <TaskColumn
+      title="Todo"
+      tasks={todo}
+      droppableId="Todo"
+      onEdit={editTask}
+      onDelete={deleteTask}
+      onMove={moveTask}
+    />
 
-        <TaskColumn
-          title={`In Progress (${progress.length})`}
-          tasks={progress}
-          onEdit={editTask}
-          onDelete={
-            deleteTask
-          }
-          onMove={moveTask}
-        />
+    <TaskColumn
+      title="In Progress"
+      tasks={progress}
+      droppableId="In Progress"
+      onEdit={editTask}
+      onDelete={deleteTask}
+      onMove={moveTask}
+    />
 
-        <TaskColumn
-          title={`Completed (${completed.length})`}
-          tasks={completed}
-          onEdit={editTask}
-          onDelete={
-            deleteTask
-          }
-          onMove={moveTask}
-        />
-      </div>
+    <TaskColumn
+      title="Completed"
+      tasks={
+        completed
+      }
+      droppableId="Completed"
+      onEdit={editTask}
+      onDelete={deleteTask}
+      onMove={moveTask}
+    />
+  </div>
+</DragDropContext>
 
 {/* MODAL */}
 
@@ -519,216 +576,7 @@ function Tasks() {
   );
 }
 
-function TaskColumn({
-  title,
-  tasks,
-  onEdit,
-  onDelete,
-  onMove,
-}) {
-  return (
-    <div
-      style={{
-        background:
-          "#F8FAFC",
-        border:
-          "1px solid #E2E8F0",
-        borderRadius:
-          "24px",
-        padding:
-          "25px",
-        minHeight:
-          "500px",
-      }}
-    >
-      <h2
-        style={{
-          marginBottom:
-            "25px",
-        }}
-      >
-        {title}
-      </h2>
 
-      {tasks.map(
-        (task) => (
-          <div
-            key={
-              task.id
-            }
-            style={{
-              background:
-                "white",
-              padding:
-                "20px",
-              borderRadius:
-                "20px",
-              marginBottom:
-                "20px",
-              boxShadow:
-                "0 8px 20px rgba(0,0,0,0.05)",
-            }}
-          >
-            <h3>
-              {
-                task.task_name
-              }
-            </h3>
-
-            <p
-              style={{
-                color:
-                  "#64748B",
-                marginTop:
-                  "10px",
-              }}
-            >
-              {
-                task.description
-              }
-            <div
-  style={{
-    display: "flex",
-    gap: "10px",
-    flexWrap: "wrap",
-    marginTop: "20px",
-  }}
->
-  <span
-    style={{
-      background:
-        task.priority ===
-        "High"
-          ? "#FEE2E2"
-          : task.priority ===
-            "Medium"
-          ? "#FEF3C7"
-          : "#DCFCE7",
-
-      color:
-        task.priority ===
-        "High"
-          ? "#DC2626"
-          : task.priority ===
-            "Medium"
-          ? "#D97706"
-          : "#16A34A",
-
-      padding:
-        "6px 14px",
-      borderRadius:
-        "30px",
-      fontSize:
-        "13px",
-      fontWeight:
-        "600",
-    }}
-  >
-    {task.priority}
-  </span>
-
-  {task.due_date && (
-    <span
-      style={{
-        background:
-          "#EFF6FF",
-        color:
-          "#2563EB",
-        padding:
-          "6px 14px",
-        borderRadius:
-          "30px",
-        fontSize:
-          "13px",
-        fontWeight:
-          "600",
-      }}
-    >
-      📅 {task.due_date}
-    </span>
-  )}
-</div>
-            </p>
-
-            <div
-              style={{
-                display: "flex",
-                gap: "10px",
-                flexWrap: "wrap",
-                marginTop: "20px",
-            }}
-            >
-              {task.status ===
-                "Todo" && (
-                <button
-                  onClick={() =>
-                    onMove(
-                    task.id,
-                    "In Progress"
-                    )
-                  }
-                  style={moveButton}
-                >
-                  Start
-                </button>
-             )}
-
-              {task.status ===
-                "In Progress" && (
-                <button
-                  onClick={() =>
-                    onMove(
-                      task.id,
-                      "Completed"
-                    )
-                  }
-                  style={moveButton}
-                >
-                Complete
-              </button>
-          )}
-
-          {task.status ===
-            "Completed" && (
-            <button
-              onClick={() =>
-                onMove(
-                  task.id,
-                  "Todo"
-                )
-              }
-              style={moveButton}
-            >
-              Reopen
-            </button>
-          )}
-            
-  <button
-    onClick={() =>
-      onEdit(task)
-    }
-    style={editButton}
-  >
-    Edit
-  </button>
-
-  <button
-    onClick={() =>
-      onDelete(
-        task.id
-      )
-    }
-    style={deleteButton}
-  >
-    Delete
-  </button>
-</div>
-          </div>
-        )
-      )}
-    </div>
-  );
-}
 
 const inputStyle = {
   width: "100%",
