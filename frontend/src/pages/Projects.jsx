@@ -187,57 +187,144 @@ function Projects() {
                   "0 10px 30px rgba(0,0,0,0.05)",
               }}
             >
-              <FolderKanban
-                size={35}
-                color="#2563EB"
-              />
+           <FolderKanban
+  size={35}
+  color="#2563EB"
+/>
 
-              <h2
-                style={{
-                  marginTop:
-                    "20px",
-                  marginBottom:
-                    "15px",
-                }}
-              >
-                {
-                  project.title
-                }
-              </h2>
+<h2
+  style={{
+    marginTop: "20px",
+    marginBottom: "10px",
+  }}
+>
+  {project.title}
+</h2>
 
-              <p
-                style={{
-                  color:
-                    "#64748B",
-                  lineHeight:
-                    "1.7",
-                  marginBottom:
-                    "25px",
-                }}
-              >
-                {
-                  project.description
-                }
-              </p>
+<p
+  style={{
+    color: "#94A3B8",
+    fontSize: "14px",
+    marginBottom: "15px",
+  }}
+>
+  {project.total_tasks} Tasks
+</p>
 
-              <span
-                style={{
-                  background:
-                    "#DCFCE7",
-                  color:
-                    "#16A34A",
-                  padding:
-                    "8px 18px",
-                  borderRadius:
-                    "30px",
-                  fontSize:
-                    "14px",
-                  fontWeight:
-                    "600",
-                }}
-              >
-                In Progress
-              </span>
+<p
+  style={{
+    color: "#64748B",
+    lineHeight: "1.7",
+    marginBottom: "25px",
+  }}
+>
+  {project.description}
+</p>
+
+{/* Progress */}
+
+<div
+  style={{
+    marginBottom: "20px",
+  }}
+>
+  <div
+    style={{
+      display: "flex",
+      justifyContent:
+        "space-between",
+      marginBottom: "10px",
+    }}
+  >
+    <span
+      style={{
+        fontWeight: "600",
+      }}
+    >
+      Progress
+    </span>
+
+    <span
+      style={{
+        fontWeight: "600",
+        color: "#2563EB",
+      }}
+    >
+      {project.progress}%
+    </span>
+  </div>
+
+  <div
+    style={{
+      background: "#E2E8F0",
+      height: "12px",
+      borderRadius: "30px",
+      overflow: "hidden",
+    }}
+  >
+    <div
+      style={{
+        width:
+          `${project.progress}%`,
+        height: "100%",
+        background:
+          project.progress ===
+          100
+            ? "#16A34A"
+            : "#2563EB",
+        borderRadius:
+          "30px",
+        transition:
+          "0.5s ease",
+      }}
+    />
+  </div>
+</div>
+
+<p
+  style={{
+    color: "#64748B",
+    marginBottom: "20px",
+    fontSize: "14px",
+  }}
+>
+  {project.completed_tasks}
+  /
+  {project.total_tasks}
+  {" "}
+  Tasks Completed
+</p>
+
+<span
+  style={{
+    background:
+      project.progress ===
+      100
+        ? "#DCFCE7"
+        : "#DBEAFE",
+
+    color:
+      project.progress ===
+      100
+        ? "#16A34A"
+        : "#2563EB",
+
+    padding:
+      "8px 18px",
+
+    borderRadius:
+      "30px",
+
+    fontSize: "14px",
+
+    fontWeight: "600",
+  }}
+>
+  {project.progress ===
+  100
+    ? "Completed"
+    : "In Progress"}
+</span>
             </div>
           )
         )}

@@ -1,5 +1,6 @@
 from flask import Blueprint
 from flask import request
+from models.task import Task
 
 from flask_jwt_extended import (
     jwt_required,
@@ -43,7 +44,10 @@ def create_project():
     }, 201
 
 
-@projects.route("/projects", methods=["GET"])
+@projects.route(
+    "/projects",
+    methods=["GET"]
+)
 @jwt_required()
 def get_projects():
 
@@ -51,11 +55,54 @@ def get_projects():
         get_jwt_identity()
     )
 
-    projects_list = Project.query.filter_by(
+    project_list = Project.query.filter_by(
         user_id=current_user
     ).all()
 
-    return [
-        project.to_dict()
-        for project in projects_list
-    ]
+    result = []
+
+    for project in project_list:
+
+        tasks = Task.query.filter_by(
+            project_id=project.id
+        ).all()
+
+        total_tasks = len(tasks)
+
+        completed_tasks = len([
+            task
+            for task in tasks
+            if task.status ==
+            "Completed"
+        ])
+
+        progress = (
+            round(
+                (
+                    completed_tasks
+                    / total_tasks
+                ) * 100
+            )
+            if total_tasks > 0
+            else 0
+        )
+
+        project_data = project.to_dict()
+
+        project_data[
+            "total_tasks"
+        ] = total_tasks
+
+        project_data[
+            "completed_tasks"
+        ] = completed_tasks
+
+        project_data[
+            "progress"
+        ] = progress
+
+        result.append(
+            project_data
+        )
+
+    return result
