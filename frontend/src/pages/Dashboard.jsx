@@ -47,51 +47,75 @@ function Dashboard() {
   ] = useState([]);
 
   useEffect(() => {
-    loadDashboard();
-  }, []);
+  loadDashboard();
+
+  window.addEventListener(
+    "focus",
+    loadDashboard
+  );
+
+  return () =>
+    window.removeEventListener(
+      "focus",
+      loadDashboard
+    );
+}, []);
 
   const loadDashboard =
-    async () => {
-      try {
-        const statsRes =
-          await api.get(
-            "/dashboard/stats"
-          );
-
-        const chartRes =
-          await api.get(
-            "/dashboard/charts"
-          );
-
-        const projectRes =
-          await api.get(
-            "/projects"
-          );
-
-        const taskRes =
-          await api.get(
-            "/tasks"
-          );
-
-        setStats(
-          statsRes.data
+  async () => {
+    try {
+      const dashboardRes =
+        await api.get(
+          "/dashboard"
         );
 
-        setCharts(
-          chartRes.data
+      const projectRes =
+        await api.get(
+          "/projects"
         );
 
-        setProjects(
-          projectRes.data
+      const taskRes =
+        await api.get(
+          "/tasks"
         );
 
-        setTasks(
-          taskRes.data
-        );
-      } catch (error) {
-        console.log(error);
-      }
-    };
+      const data =
+        dashboardRes.data;
+
+      setStats({
+        projects:
+          data.projects,
+        tasks:
+          data.tasks,
+        completed:
+          data.completed,
+        pending:
+          data.todo +
+          data.progress,
+      });
+
+      setCharts({
+        todo:
+          data.todo,
+        progress:
+          data.progress,
+        completed:
+          data.completed,
+      });
+
+      setProjects(
+        projectRes.data
+      );
+
+      setTasks(
+        taskRes.data
+      );
+    } catch (error) {
+      console.log(
+        error
+      );
+    }
+  };
 
   const pendingTasks =
     tasks.filter(
