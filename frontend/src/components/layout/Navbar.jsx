@@ -57,6 +57,7 @@ function Navbar() {
 
         tasks.forEach(
           (task) => {
+            // Completed
             if (
               task.status ===
               "Completed"
@@ -68,6 +69,7 @@ function Navbar() {
               });
             }
 
+            // Due dates
             if (
               task.due_date
             ) {
@@ -89,8 +91,7 @@ function Navbar() {
                 );
 
               if (
-                diff ===
-                1
+                diff === 1
               ) {
                 items.push({
                   icon:
@@ -101,8 +102,7 @@ function Navbar() {
               }
 
               if (
-                diff <
-                  0 &&
+                diff < 0 &&
                 task.status !==
                   "Completed"
               ) {
@@ -136,33 +136,44 @@ function Navbar() {
         background:
           darkMode
             ? "#1E293B"
-            : "#ffffff",
+            : "#FFFFFF",
+
         border:
           darkMode
             ? "1px solid #334155"
             : "1px solid #E2E8F0",
+
         borderRadius:
           "20px",
+
         padding:
           "0 30px",
+
         display:
           "flex",
+
         alignItems:
           "center",
+
         justifyContent:
           "space-between",
+
         transition:
           "0.3s",
+
+        position:
+          "relative",
       }}
     >
+      {/* LEFT */}
       <div>
         <h2
           style={{
+            margin: 0,
             color:
               darkMode
                 ? "#F8FAFC"
                 : "#0F172A",
-            margin: 0,
           }}
         >
           Good Morning 👋
@@ -170,12 +181,13 @@ function Navbar() {
 
         <p
           style={{
+            marginTop:
+              "8px",
+
             color:
               darkMode
                 ? "#CBD5E1"
                 : "#64748B",
-            marginTop:
-              "8px",
           }}
         >
           Manage your projects
@@ -183,28 +195,33 @@ function Navbar() {
         </p>
       </div>
 
+      {/* RIGHT */}
       <div
         style={{
           display:
             "flex",
-          gap: "20px",
+
           alignItems:
             "center",
+
+          gap: "25px",
+
           color:
             darkMode
               ? "#CBD5E1"
               : "#0F172A",
         }}
       >
+        {/* SEARCH */}
         <Search
+          size={22}
           style={{
             cursor:
               "pointer",
           }}
         />
 
-        {/* DARK MODE */}
-
+        {/* THEME */}
         <div
           onClick={
             toggleTheme
@@ -215,14 +232,17 @@ function Navbar() {
           }}
         >
           {darkMode ? (
-            <Sun />
+            <Sun
+              size={22}
+            />
           ) : (
-            <Moon />
+            <Moon
+              size={22}
+            />
           )}
         </div>
 
         {/* NOTIFICATIONS */}
-
         <div
           style={{
             position:
@@ -238,6 +258,7 @@ function Navbar() {
             style={{
               cursor:
                 "pointer",
+
               position:
                 "relative",
             }}
@@ -252,73 +273,100 @@ function Navbar() {
                 style={{
                   position:
                     "absolute",
+
                   top:
                     "-8px",
+
                   right:
                     "-8px",
-                  background:
-                    "#EF4444",
-                  color:
-                    "white",
+
                   width:
                     "20px",
+
                   height:
                     "20px",
+
                   borderRadius:
                     "50%",
+
+                  background:
+                    "#EF4444",
+
+                  color:
+                    "white",
+
                   fontSize:
                     "12px",
-                  display:
-                    "flex",
-                  justifyContent:
-                    "center",
-                  alignItems:
-                    "center",
+
                   fontWeight:
                     "600",
+
+                  display:
+                    "flex",
+
+                  justifyContent:
+                    "center",
+
+                  alignItems:
+                    "center",
                 }}
               >
-                {
-                  notifications.length
-                }
+                {notifications.length >
+                9
+                  ? "9+"
+                  : notifications.length}
               </div>
             )}
           </div>
 
+          {/* DROPDOWN */}
           {showNotifications && (
             <div
               style={{
                 position:
                   "absolute",
+
                 top:
                   "45px",
+
                 right: 0,
+
                 width:
-                  "320px",
+                  "340px",
+
                 background:
                   darkMode
                     ? "#1E293B"
-                    : "white",
+                    : "#FFFFFF",
+
                 border:
                   darkMode
                     ? "1px solid #334155"
                     : "1px solid #E2E8F0",
+
                 borderRadius:
                   "20px",
+
                 padding:
                   "20px",
+
                 boxShadow:
                   "0 20px 40px rgba(0,0,0,0.08)",
-                zIndex:
-                  1000,
+
                 maxHeight:
                   "350px",
+
                 overflowY:
                   "auto",
+
+                zIndex:
+                  1000,
               }}
             >
               <h3
                 style={{
+                  marginTop: 0,
+
                   color:
                     darkMode
                       ? "#F8FAFC"
@@ -330,16 +378,36 @@ function Navbar() {
 
               {notifications.length ===
               0 ? (
-                <p
+                <div
                   style={{
-                    color:
-                      darkMode
-                        ? "#CBD5E1"
-                        : "#64748B",
+                    textAlign:
+                      "center",
+
+                    padding:
+                      "40px 0",
                   }}
                 >
-                  No notifications
-                </p>
+                  <div
+                    style={{
+                      fontSize:
+                        "40px",
+                    }}
+                  >
+                    🔔
+                  </div>
+
+                  <p
+                    style={{
+                      color:
+                        darkMode
+                          ? "#CBD5E1"
+                          : "#64748B",
+                    }}
+                  >
+                    You're all
+                    caught up!
+                  </p>
+                </div>
               ) : (
                 notifications.map(
                   (
@@ -352,23 +420,76 @@ function Navbar() {
                       }
                       style={{
                         padding:
-                          "12px 0",
+                          "15px",
+
                         borderBottom:
                           darkMode
                             ? "1px solid #334155"
                             : "1px solid #F1F5F9",
+
                         color:
                           darkMode
                             ? "#CBD5E1"
                             : "#0F172A",
+
+                        cursor:
+                          "pointer",
+
+                        borderRadius:
+                          "12px",
                       }}
                     >
-                      {
-                        item.icon
-                      }{" "}
-                      {
-                        item.message
-                      }
+                      <div
+                        style={{
+                          display:
+                            "flex",
+
+                          gap:
+                            "12px",
+
+                          alignItems:
+                            "center",
+                        }}
+                      >
+                        <span
+                          style={{
+                            fontSize:
+                              "20px",
+                          }}
+                        >
+                          {
+                            item.icon
+                          }
+                        </span>
+
+                        <div>
+                          <p
+                            style={{
+                              margin:
+                                0,
+
+                              fontWeight:
+                                "600",
+                            }}
+                          >
+                            {
+                              item.message
+                            }
+                          </p>
+
+                          <small
+                            style={{
+                              color:
+                                darkMode
+                                  ? "#94A3B8"
+                                  : "#64748B",
+                            }}
+                          >
+                            DevTrack
+                            Notification
+                          </small>
+                        </div>
+                      </div>
                     </div>
                   )
                 )
@@ -378,24 +499,38 @@ function Navbar() {
         </div>
 
         {/* PROFILE */}
-
         <div
           style={{
             width: "45px",
-            height: "45px",
+            height:
+              "45px",
+
             borderRadius:
               "50%",
+
             background:
               "#2563EB",
-            color: "white",
+
+            color:
+              "white",
+
             display:
               "flex",
+
             justifyContent:
               "center",
+
             alignItems:
               "center",
+
             fontWeight:
               "700",
+
+            fontSize:
+              "18px",
+
+            cursor:
+              "pointer",
           }}
         >
           H

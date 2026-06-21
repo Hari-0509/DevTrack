@@ -19,6 +19,11 @@ from routes.dashboard import dashboard
 
 from routes.profile import profile
 
+from routes.notifications import (
+    notifications
+)
+
+
 from flask import Flask
 from flask_cors import CORS
 
@@ -65,6 +70,9 @@ app.register_blueprint(projects)
 app.register_blueprint(tasks)
 app.register_blueprint(dashboard)
 app.register_blueprint(profile)
+app.register_blueprint(
+    notifications
+)
 
 with app.app_context():
     db.create_all()
