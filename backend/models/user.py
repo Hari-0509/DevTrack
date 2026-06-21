@@ -25,9 +25,18 @@ class User(db.Model):
         nullable=False
     )
 
+    role = db.Column(
+        db.String(100),
+        default="Student"
+    )
+
     def to_dict(self):
         return {
             "id": self.id,
-            "username": self.username,
-            "email": self.email
+            "username":
+                self.username,
+            "email":
+                self.email,
+            "role":
+                self.role
         }

@@ -53,20 +53,30 @@ function Profile() {
     setNewPassword,
   ] = useState("");
 
+  const [
+  role,
+  setRole,
+] = useState("");
+
   useEffect(() => {
     loadProfile();
   }, []);
 
   useEffect(() => {
-    if (profile) {
-      setUsername(
-        profile.name
-      );
-      setEmail(
-        profile.email
-      );
-    }
-  }, [profile]);
+  if (profile) {
+    setUsername(
+      profile.name
+    );
+
+    setEmail(
+      profile.email
+    );
+
+    setRole(
+      profile.role
+    );
+  }
+}, [profile]);
 
   const loadProfile =
     async () => {
@@ -207,8 +217,7 @@ function Profile() {
                     : "#64748B",
               }}
             >
-              Software Engineer
-              Student
+              {profile.role}
             </p>
           </div>
         </div>
@@ -400,6 +409,39 @@ function Profile() {
               placeholder="Email"
               style={input}
             />
+           <select
+  value={role}
+  onChange={(e) =>
+    setRole(
+      e.target.value
+    )
+  }
+  style={input}
+>
+  <option>
+    Student
+  </option>
+
+  <option>
+    Software Engineer
+  </option>
+
+  <option>
+    Business Analyst
+  </option>
+
+  <option>
+    DevOps Engineer
+  </option>
+
+  <option>
+    Data Scientist
+  </option>
+
+  <option>
+    Intern
+  </option>
+</select>
 
             <div
               style={{
@@ -411,12 +453,51 @@ function Profile() {
               }}
             >
               <button
-                style={buttonStyle(
-                  "#2563EB"
-                )}
-              >
-                Save
-              </button>
+  onClick={
+    async () => {
+      try {
+        await api.put(
+          "/profile",
+          {
+            username,
+            email,
+            role,
+          }
+        );
+
+        setProfile({
+          ...profile,
+          name:
+            username,
+          email,
+          role,
+        });
+
+        setShowEdit(
+          false
+        );
+
+        alert(
+          "Profile Updated Successfully"
+        );
+      } catch (
+        error
+      ) {
+        console.log(
+          error
+        );
+        alert(
+          "Unable to update profile"
+        );
+      }
+    }
+  }
+  style={buttonStyle(
+    "#2563EB"
+  )}
+>
+  Save
+</button>
 
               <button
                 onClick={() =>
@@ -491,12 +572,67 @@ function Profile() {
               }}
             >
               <button
-                style={buttonStyle(
-                  "#7C3AED"
-                )}
-              >
-                Update
-              </button>
+  onClick={
+    async () => {
+
+      if (
+        !currentPassword ||
+        !newPassword
+      ) {
+        alert(
+          "Please fill all fields"
+        );
+        return;
+      }
+
+      try {
+        const res =
+          await api.put(
+            "/profile/password",
+            {
+              currentPassword,
+              newPassword,
+            }
+          );
+
+        alert(
+          res.data.message
+        );
+
+        setCurrentPassword(
+          ""
+        );
+
+        setNewPassword(
+          ""
+        );
+
+        setShowPassword(
+          false
+        );
+
+      } catch (
+        error
+      ) {
+        console.log(
+          error
+        );
+
+        alert(
+          error.response
+            ?.data
+            ?.message ||
+          "Unable to update password"
+        );
+      }
+    }
+  }
+  style={buttonStyle(
+    "#7C3AED"
+  )}
+>
+  Update
+</button>
 
               <button
                 onClick={() =>

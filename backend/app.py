@@ -37,6 +37,13 @@ CORS(
 
 app.config.from_object(Config)
 
+print(
+    "DB URI:",
+    app.config[
+        "SQLALCHEMY_DATABASE_URI"
+    ]
+)
+
 jwt = JWTManager(app)
 
 @jwt.invalid_token_loader
