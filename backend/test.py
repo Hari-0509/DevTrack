@@ -1,13 +1,9 @@
-import sqlite3
+from app import app
+from models.project import Project
 
-conn = sqlite3.connect("instance/devtrack.db")
-cursor = conn.cursor()
-
-cursor.execute("""
-ALTER TABLE users
-ADD COLUMN role TEXT
-DEFAULT 'Student'
-""")
-
-conn.commit()
-conn.close()
+with app.app_context():
+    for p in Project.query.all():
+        print(
+            p.id,
+            p.title
+        )

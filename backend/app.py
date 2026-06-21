@@ -22,7 +22,15 @@ from routes.profile import profile
 from routes.notifications import (
     notifications
 )
-
+from models.project_member import (
+    ProjectMember
+)
+from models.invitation import (
+    Invitation
+)
+from routes.invitations import (
+    invitations
+)
 
 from flask import Flask
 from flask_cors import CORS
@@ -70,9 +78,8 @@ app.register_blueprint(projects)
 app.register_blueprint(tasks)
 app.register_blueprint(dashboard)
 app.register_blueprint(profile)
-app.register_blueprint(
-    notifications
-)
+app.register_blueprint(notifications)
+app.register_blueprint(invitations)
 
 with app.app_context():
     db.create_all()
