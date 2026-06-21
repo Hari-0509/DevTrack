@@ -75,6 +75,15 @@ function Sidebar() {
       path:
         "/settings",
     },
+
+    {
+     title: 
+      "Profile",
+     icon: 
+      User,
+     path: 
+      "/profile",
+    }
   ];
 
   const handleLogout =

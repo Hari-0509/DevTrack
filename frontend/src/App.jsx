@@ -17,6 +17,7 @@ import Dashboard from "./pages/Dashboard";
 import Projects from "./pages/Projects";
 import Tasks from "./pages/Tasks";
 import Analytics from "./pages/Analytics";
+import Profile from "./pages/Profile";
 
 export const ThemeContext =
   createContext();
@@ -141,6 +142,19 @@ function App() {
             )
           }
         />
+        <Route
+  path="/profile"
+  element={
+    token ? (
+      <Profile />
+    ) : (
+      <Navigate
+        to="/login"
+      />
+    )
+  }
+/>
+
       </Routes>
     </ThemeContext.Provider>
   );

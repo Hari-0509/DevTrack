@@ -17,7 +17,7 @@ from models.task import Task
 
 from routes.dashboard import dashboard
 
-
+from routes.profile import profile
 
 from flask import Flask
 from flask_cors import CORS
@@ -57,6 +57,7 @@ app.register_blueprint(auth)
 app.register_blueprint(projects)
 app.register_blueprint(tasks)
 app.register_blueprint(dashboard)
+app.register_blueprint(profile)
 
 with app.app_context():
     db.create_all()

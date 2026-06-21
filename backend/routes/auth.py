@@ -95,13 +95,3 @@ def login():
         "message": "Login successful",
         "token": access_token
     }, 200
-@auth.route("/profile")
-@jwt_required()
-def profile():
-
-    current_user = get_jwt_identity()
-
-    return {
-        "message": "Profile accessed successfully",
-        "user_id": current_user
-    }
