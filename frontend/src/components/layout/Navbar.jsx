@@ -35,6 +35,79 @@ function Navbar() {
     setShowNotifications,
   ] = useState(false);
 
+  const [
+  invitations,
+  setInvitations
+] = useState([]);
+
+  useEffect(() => {
+  loadNotifications();
+  loadInvitations();
+}, []);
+
+  const loadInvitations =
+  async () => {
+    try {
+      const res =
+        await api.get(
+          "/invitations"
+        );
+
+      console.log(
+        "INVITATIONS",
+        res.data
+      );
+
+      setInvitations(
+        res.data
+      );
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const acceptInvite =
+  async (id) => {
+    try {
+      await api.post(
+        `/invitations/${id}/accept`
+      );
+
+      loadInvitations();
+
+      alert(
+        "Invitation Accepted"
+      );
+    } catch (
+      error
+    ) {
+      console.log(
+        error
+      );
+    }
+  };
+
+  const declineInvite =
+  async (id) => {
+    try {
+      await api.post(
+        `/invitations/${id}/decline`
+      );
+
+      loadInvitations();
+
+      alert(
+        "Invitation Declined"
+      );
+    } catch (
+      error
+    ) {
+      console.log(
+        error
+      );
+    }
+  };
+
   useEffect(() => {
     loadNotifications();
   }, []);
@@ -376,8 +449,8 @@ function Navbar() {
                 Notifications
               </h3>
 
-              {notifications.length ===
-              0 ? (
+              {notifications.length === 0 &&
+ invitations.length === 0 ? (
                 <div
                   style={{
                     textAlign:
@@ -408,92 +481,156 @@ function Navbar() {
                     caught up!
                   </p>
                 </div>
-              ) : (
-                notifications.map(
-                  (
-                    item,
-                    index
-                  ) => (
-                    <div
-                      key={
-                        index
-                      }
-                      style={{
-                        padding:
-                          "15px",
+            ) : (
+  <>
+    {invitations.map(
+      (invite) => (
+        <div
+          key={invite.id}
+          style={{
+            padding: "15px",
+            borderBottom:
+              darkMode
+                ? "1px solid #334155"
+                : "1px solid #F1F5F9",
+          }}
+        >
+          <h4
+            style={{
+              margin: 0,
+              color: darkMode
+                ? "#F8FAFC"
+                : "#0F172A",
+            }}
+          >
+            📩 Project Invitation
+          </h4>
 
-                        borderBottom:
-                          darkMode
-                            ? "1px solid #334155"
-                            : "1px solid #F1F5F9",
+          <p
+            style={{
+              color: darkMode
+                ? "#CBD5E1"
+                : "#64748B",
+            }}
+          >
+            Project ID:
+            {" "}
+            {invite.project_id}
+          </p>
 
-                        color:
-                          darkMode
-                            ? "#CBD5E1"
-                            : "#0F172A",
+          <p
+            style={{
+              color: darkMode
+                ? "#CBD5E1"
+                : "#64748B",
+            }}
+          >
+            Role:
+            {" "}
+            {invite.role}
+          </p>
 
-                        cursor:
-                          "pointer",
-
-                        borderRadius:
-                          "12px",
-                      }}
-                    >
-                      <div
-                        style={{
-                          display:
-                            "flex",
-
-                          gap:
-                            "12px",
-
-                          alignItems:
-                            "center",
-                        }}
-                      >
-                        <span
-                          style={{
-                            fontSize:
-                              "20px",
-                          }}
-                        >
-                          {
-                            item.icon
-                          }
-                        </span>
-
-                        <div>
-                          <p
-                            style={{
-                              margin:
-                                0,
-
-                              fontWeight:
-                                "600",
-                            }}
-                          >
-                            {
-                              item.message
-                            }
-                          </p>
-
-                          <small
-                            style={{
-                              color:
-                                darkMode
-                                  ? "#94A3B8"
-                                  : "#64748B",
-                            }}
-                          >
-                            DevTrack
-                            Notification
-                          </small>
-                        </div>
-                      </div>
-                    </div>
-                  )
+          <div
+            style={{
+              display: "flex",
+              gap: "10px",
+            }}
+          >
+            <button
+              onClick={() =>
+                acceptInvite(
+                  invite.id
                 )
-              )}
+              }
+            >
+              Accept
+            </button>
+
+            <button
+              onClick={() =>
+                declineInvite(
+                  invite.id
+                )
+              }
+            >
+              Decline
+            </button>
+          </div>
+        </div>
+      )
+    )}
+
+    {notifications.map(
+      (
+        item,
+        index
+      ) => (
+        <div
+          key={index}
+          style={{
+            padding: "15px",
+            borderBottom:
+              darkMode
+                ? "1px solid #334155"
+                : "1px solid #F1F5F9",
+            color:
+              darkMode
+                ? "#CBD5E1"
+                : "#0F172A",
+            cursor:
+              "pointer",
+            borderRadius:
+              "12px",
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              gap: "12px",
+              alignItems:
+                "center",
+            }}
+          >
+            <span
+              style={{
+                fontSize:
+                  "20px",
+              }}
+            >
+              {item.icon}
+            </span>
+
+            <div>
+              <p
+                style={{
+                  margin: 0,
+                  fontWeight:
+                    "600",
+                }}
+              >
+                {
+                  item.message
+                }
+              </p>
+
+              <small
+                style={{
+                  color:
+                    darkMode
+                      ? "#94A3B8"
+                      : "#64748B",
+                }}
+              >
+                DevTrack
+                Notification
+              </small>
+            </div>
+          </div>
+        </div>
+      )
+    )}
+  </>
+)} 
             </div>
           )}
         </div>

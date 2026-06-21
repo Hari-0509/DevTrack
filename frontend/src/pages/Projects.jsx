@@ -18,6 +18,27 @@ function Projects() {
     setDescription,
   ] = useState("");
 
+  const [
+  showInvite,
+  setShowInvite
+] = useState(false);
+
+const [
+  selectedProject,
+  setSelectedProject
+] = useState(null);
+
+const [
+  inviteEmail,
+  setInviteEmail
+] = useState("");
+
+const [
+  inviteRole,
+  setInviteRole
+] = useState("Member");
+
+
   useEffect(() => {
     loadProjects();
   }, []);
@@ -69,6 +90,52 @@ function Projects() {
             search.toLowerCase()
           )
     );
+  
+  const sendInvite =
+  async () => {
+    try {
+      const res =
+        await api.post(
+          `/projects/${selectedProject}/invite`,
+          {
+            email:
+              inviteEmail,
+            role:
+              inviteRole,
+          }
+        );
+
+      alert(
+        res.data.message
+      );
+
+      setShowInvite(
+        false
+      );
+
+      setInviteEmail(
+        ""
+      );
+
+      setInviteRole(
+        "Member"
+      );
+
+    } catch (
+      error
+    ) {
+      console.log(
+        error
+      );
+
+      alert(
+        error.response
+          ?.data
+          ?.message ||
+        "Unable to send invitation"
+      );
+    }
+  };
 
   return (
     <MainLayout>
@@ -325,6 +392,47 @@ function Projects() {
     ? "Completed"
     : "In Progress"}
 </span>
+<button
+  onClick={() => {
+    setSelectedProject(
+      project.id
+    );
+
+    setShowInvite(
+      true
+    );
+  }}
+  style={{
+    marginTop:
+      "20px",
+
+    width:
+      "100%",
+
+    padding:
+      "12px",
+
+    background:
+      "#2563EB",
+
+    color:
+      "white",
+
+    border:
+      "none",
+
+    borderRadius:
+      "12px",
+
+    cursor:
+      "pointer",
+
+    fontWeight:
+      "600",
+  }}
+>
+  + Invite Member
+</button>
             </div>
           )
         )}
@@ -458,6 +566,167 @@ function Projects() {
           </div>
         </div>
       )}
+      {
+  showInvite && (
+    <div
+      style={{
+        position:
+          "fixed",
+        top: 0,
+        left: 0,
+        width: "100%",
+        height:
+          "100%",
+        background:
+          "rgba(0,0,0,0.5)",
+        display:
+          "flex",
+        justifyContent:
+          "center",
+        alignItems:
+          "center",
+        zIndex:
+          999,
+      }}
+    >
+      <div
+        style={{
+          width:
+            "420px",
+          background:
+            "white",
+          padding:
+            "30px",
+          borderRadius:
+            "20px",
+        }}
+      >
+        <h2>
+          Invite Member
+        </h2>
+
+        <input
+          type="email"
+          placeholder="Enter Email"
+          value={
+            inviteEmail
+          }
+          onChange={(
+            e
+          ) =>
+            setInviteEmail(
+              e.target
+                .value
+            )
+          }
+          style={{
+            width:
+              "100%",
+            padding:
+              "14px",
+            marginTop:
+              "20px",
+            border:
+              "1px solid #CBD5E1",
+            borderRadius:
+              "12px",
+          }}
+        />
+
+        <select
+          value={
+            inviteRole
+          }
+          onChange={(
+            e
+          ) =>
+            setInviteRole(
+              e.target
+                .value
+            )
+          }
+          style={{
+            width:
+              "100%",
+            padding:
+              "14px",
+            marginTop:
+              "20px",
+            border:
+              "1px solid #CBD5E1",
+            borderRadius:
+              "12px",
+          }}
+        >
+          <option>
+            Member
+          </option>
+
+          <option>
+            Admin
+          </option>
+        </select>
+
+        <div
+          style={{
+            display:
+              "flex",
+            gap:
+              "15px",
+            marginTop:
+              "30px",
+          }}
+        >
+          <button
+            onClick={
+              sendInvite
+            }
+            style={{
+              flex: 1,
+              padding:
+                "14px",
+              background:
+                "#2563EB",
+              color:
+                "white",
+              border:
+                "none",
+              borderRadius:
+                "12px",
+              cursor:
+                "pointer",
+            }}
+          >
+            Send Invite
+          </button>
+
+          <button
+            onClick={() =>
+              setShowInvite(
+                false
+              )
+            }
+            style={{
+              flex: 1,
+              padding:
+                "14px",
+              background:
+                "#E2E8F0",
+              border:
+                "none",
+              borderRadius:
+                "12px",
+              cursor:
+                "pointer",
+            }}
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
     </MainLayout>
   );
 }
