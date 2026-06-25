@@ -183,7 +183,27 @@ function TaskColumn({
                           </span>
                         )}
                       </div>
-
+                      {task.assigned_to && (
+  <div
+    style={{
+      marginBottom:
+        "20px",
+      color:
+        "#475569",
+      fontWeight:
+        "600",
+      fontSize:
+        "14px",
+    }}
+  >
+    👤 Assigned To:
+    {" "}
+    User
+    {
+      task.assigned_to
+    }
+  </div>
+)}
                       {/* MOVE BUTTONS */}
 
                       <div

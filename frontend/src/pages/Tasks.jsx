@@ -45,6 +45,16 @@ function Tasks() {
   setSearch] =
   useState("");
 
+  const [
+  members,
+  setMembers
+  ] = useState([]);
+
+  const [
+  assignedTo,
+  setAssignedTo
+  ] = useState("");
+
   useEffect(() => {
     loadTasks();
     loadProjects();
@@ -84,27 +94,55 @@ function Tasks() {
     }
   };
 
+  const loadMembers =
+  async (projectId) => {
+    try {
+      const response =
+        await api.get(
+          `/projects/${projectId}/members`
+        );
+
+      setMembers(
+        Array.isArray(
+          response.data
+        )
+          ? response.data
+          : []
+      );
+    } catch (error) {
+      console.log(error);
+      setMembers([]);
+    }
+  };
+
   const createTask =
     async () => {
       try {
         await api.post(
-        "/tasks",
-      {
-        task_name:
-          taskName,
+  "/tasks",
+  {
+    task_name:
+      taskName,
 
-        description,
+    description,
 
-        status,
+    status,
 
-      priority,
+    priority,
 
-      due_date:
-        dueDate,
+    due_date:
+      dueDate,
 
-      project_id:
-        Number(projectId),
-      }
+    project_id:
+      Number(projectId),
+
+    assigned_to:
+      assignedTo
+        ? Number(
+            assignedTo
+          )
+        : null
+  }
 );
 
         clearForm();
@@ -115,27 +153,38 @@ function Tasks() {
     };
 
   const updateTask =
-    async () => {
-      try {
-        await api.put(
-          `/tasks/${editingTask.id}`,
-          {
-            task_name:
-              taskName,
-            description,
-            status,
-            priority,
-            due_date:
-              dueDate,
-          }
-        );
+  async () => {
+    try {
+      await api.put(
+        `/tasks/${editingTask.id}`,
+        {
+          task_name:
+            taskName,
 
-        clearForm();
-        loadTasks();
-      } catch (error) {
-        console.log(error);
-      }
-    };
+          description,
+
+          status,
+
+          priority,
+
+          due_date:
+            dueDate,
+
+          assigned_to:
+            assignedTo
+              ? Number(
+                  assignedTo
+                )
+              : null
+        }
+      );
+
+      clearForm();
+      loadTasks();
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const deleteTask =
     async (id) => {
@@ -180,6 +229,14 @@ function Tasks() {
       task.project_id
     );
 
+    setAssignedTo(
+      task.assigned_to || ""
+    );
+
+    loadMembers(
+      task.project_id
+    );
+
     setShowModal(true);
   };
 
@@ -189,6 +246,8 @@ function Tasks() {
     setPriority("Medium");
     setDueDate("");
     setProjectId("");
+    setAssignedTo("");
+    setMembers([]);
     setEditingTask(null);
     setShowModal(false);
   };
@@ -497,11 +556,15 @@ function Tasks() {
       {!editingTask && (
         <select
           value={projectId}
-          onChange={(e) =>
-            setProjectId(
-              e.target.value
-            )
-          }
+          onChange={(e) => {
+  setProjectId(
+    e.target.value
+  );
+
+  loadMembers(
+    e.target.value
+  );
+}}
           style={inputStyle}
         >
           <option value="">
@@ -527,6 +590,39 @@ function Tasks() {
         </select>
       )}
 
+      <select
+  value={assignedTo}
+  onChange={(e) =>
+    setAssignedTo(
+      e.target.value
+    )
+  }
+  style={{
+    ...inputStyle,
+    color:
+      "#0F172A",
+    background:
+      "#FFFFFF"
+  }}
+>
+  <option value="">
+    Select Member
+  </option>
+
+  {members.map(
+    (member) => (
+      <option
+        key={member.id}
+        value={member.id}
+      >
+        {member.username}
+        {" ("}
+        {member.role}
+        {")"}
+      </option>
+    )
+  )}
+</select>
       <div
         style={{
           display: "flex",
