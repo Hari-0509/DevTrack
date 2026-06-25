@@ -31,6 +31,10 @@ from models.invitation import (
 from routes.invitations import (
     invitations
 )
+from routes.project_members import (
+    project_members
+)
+
 
 from flask import Flask
 from flask_cors import CORS
@@ -80,7 +84,9 @@ app.register_blueprint(dashboard)
 app.register_blueprint(profile)
 app.register_blueprint(notifications)
 app.register_blueprint(invitations)
-
+app.register_blueprint(
+    project_members
+)
 with app.app_context():
     db.create_all()
 

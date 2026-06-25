@@ -6,6 +6,9 @@ from flask_jwt_extended import (
 
 from models.project import Project
 from models.task import Task
+from models.project_member import (
+    ProjectMember
+)
 
 dashboard = Blueprint(
     "dashboard",
@@ -24,27 +27,61 @@ def get_dashboard():
         get_jwt_identity()
     )
 
-    projects = Project.query.filter_by(
-        user_id=current_user
-    ).all()
+    # Projects created by me
+    owned_projects = (
+        Project.query.filter_by(
+            user_id=current_user
+        ).all()
+    )
+
+    # Projects shared with me
+    member_projects = (
+        Project.query.join(
+            ProjectMember,
+            Project.id ==
+            ProjectMember.project_id
+        )
+        .filter(
+            ProjectMember.user_id ==
+            current_user
+        )
+        .all()
+    )
+
+    # Merge and remove duplicates
+    projects = list({
+        p.id: p
+        for p in (
+            owned_projects +
+            member_projects
+        )
+    }.values())
 
     project_ids = [
         project.id
         for project in projects
     ]
 
-    tasks = Task.query.filter(
-        Task.project_id.in_(
-            project_ids
+    if project_ids:
+        tasks = (
+            Task.query.filter(
+                Task.project_id.in_(
+                    project_ids
+                )
+            ).all()
         )
-    ).all()
+    else:
+        tasks = []
 
-    total_tasks = len(tasks)
+    total_tasks = len(
+        tasks
+    )
 
     todo = len([
         task
         for task in tasks
-        if task.status == "Todo"
+        if task.status ==
+        "Todo"
     ])
 
     progress = len([
@@ -85,8 +122,8 @@ def get_dashboard():
     productivity = (
         round(
             (
-                completed
-                / total_tasks
+                completed /
+                total_tasks
             ) * 100,
             1
         )
