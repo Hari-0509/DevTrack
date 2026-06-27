@@ -7,8 +7,10 @@ conn = sqlite3.connect(
 cursor = conn.cursor()
 
 cursor.execute(
-    "PRAGMA table_info(tasks)"
+    "SELECT * FROM activities"
 )
 
 for row in cursor.fetchall():
     print(row)
+
+conn.close()

@@ -4,10 +4,17 @@ from flask_jwt_extended import (
     get_jwt_identity
 )
 
+from database.db import db
+
 from models.task import Task
 from models.project import Project
-from models.project_member import ProjectMember
+from models.project_member import (
+    ProjectMember
+)
 from models.user import User
+from models.activity import Activity
+
+
 tasks = Blueprint(
     "tasks",
     __name__
@@ -49,10 +56,8 @@ def create_task():
 
     is_member = (
         ProjectMember.query.filter_by(
-            project_id=
-                project.id,
-            user_id=
-                current_user
+            project_id=project.id,
+            user_id=current_user
         ).first()
     )
 
@@ -88,16 +93,23 @@ def create_task():
             "due_date"
         ),
 
-        project_id=
-            project.id,
+        project_id=project.id,
 
-        assigned_to=
-            data.get(
-                "assigned_to"
-            )
+        assigned_to=data.get(
+            "assigned_to"
+        )
     )
 
     db.session.add(task)
+    db.session.commit()
+
+    activity = Activity(
+        user_id=current_user,
+        action=
+            f'Created task "{task.task_name}"'
+    )
+
+    db.session.add(activity)
     db.session.commit()
 
     return {
@@ -195,7 +207,6 @@ def get_tasks():
 
     return result
 
-    
 
 # ==========================================
 # UPDATE TASK
@@ -232,10 +243,8 @@ def update_task(task_id):
 
     is_member = (
         ProjectMember.query.filter_by(
-            project_id=
-                project.id,
-            user_id=
-                current_user
+            project_id=project.id,
+            user_id=current_user
         ).first()
     )
 
@@ -249,6 +258,8 @@ def update_task(task_id):
         }, 403
 
     data = request.get_json()
+
+    old_status = task.status
 
     task.task_name = data.get(
         "task_name",
@@ -281,6 +292,25 @@ def update_task(task_id):
     )
 
     db.session.commit()
+
+    if (
+        old_status !=
+        "Completed"
+        and
+        task.status ==
+        "Completed"
+    ):
+
+        activity = Activity(
+            user_id=current_user,
+            action=
+                f'Completed task "{task.task_name}"'
+        )
+
+        db.session.add(
+            activity
+        )
+        db.session.commit()
 
     return {
         "message":
@@ -323,10 +353,8 @@ def delete_task(task_id):
 
     is_member = (
         ProjectMember.query.filter_by(
-            project_id=
-                project.id,
-            user_id=
-                current_user
+            project_id=project.id,
+            user_id=current_user
         ).first()
     )
 
@@ -340,6 +368,17 @@ def delete_task(task_id):
         }, 403
 
     db.session.delete(task)
+    db.session.commit()
+
+    activity = Activity(
+        user_id=current_user,
+        action=
+            f'Deleted task "{task.task_name}"'
+    )
+
+    db.session.add(
+        activity
+    )
     db.session.commit()
 
     return {
