@@ -121,7 +121,8 @@ def google_login():
             .verify_oauth2_token(
                 token,
                 requests.Request(),
-                "339645643863-6ji4872gdoamm5fe7g3rtr9kcnfk4019.apps.googleusercontent.com"
+                "339645643863-6ji4872gdoamm5fe7g3rtr9kcnfk4019.apps.googleusercontent.com",
+                clock_skew_in_seconds=10
             )
         )
 

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import api from "../services/api";
+import { GoogleLogin } from "@react-oauth/google";
 
 function Register() {
   const navigate = useNavigate();
@@ -53,6 +54,37 @@ function Register() {
       }
     };
 
+   const handleGoogleSuccess =
+  async (
+    credentialResponse
+  ) => {
+    try {
+
+      const response =
+        await api.post(
+          "/google-login",
+          {
+            token:
+              credentialResponse
+                .credential
+          }
+        );
+
+      localStorage.setItem(
+        "token",
+        response.data.token
+      );
+
+      navigate("/");
+    }
+    catch (error) {
+      console.log(error);
+
+      alert(
+        "Google Register Failed"
+      );
+    }
+};
   return (
     <div
       style={{
@@ -230,7 +262,7 @@ function Register() {
       >
         <div
           style={{
-            width: "460px",
+            width: "520px",
             background:
               "rgba(255,255,255,0.9)",
             backdropFilter:
@@ -238,7 +270,7 @@ function Register() {
             border:
               "1px solid rgba(255,255,255,0.3)",
             padding:
-              "50px",
+              "55px",
             borderRadius:
               "30px",
             boxShadow:
@@ -341,32 +373,75 @@ function Register() {
           </button>
 
           <div
-            style={{
-              textAlign:
-                "center",
-              margin:
-                "30px 0",
-              color:
-                "#64748B",
-            }}
-          >
-            OR
-          </div>
+  style={{
+    textAlign: "center",
+    marginTop: "25px",
+  }}
+>
+  <div
+    style={{
+      display: "flex",
+      alignItems: "center",
+      marginBottom: "25px",
+    }}
+  >
+    <div
+      style={{
+        flex: 1,
+        height: "1px",
+        background: "#E2E8F0",
+      }}
+    />
 
-          <button
-            style={
-              googleButton
-            }
-          >
-            <img
-              src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
-              width="22"
-              alt="google"
-            />
+    <span
+      style={{
+        margin: "0 16px",
+        color: "#64748B",
+        fontSize: "14px",
+      }}
+    >
+      OR
+    </span>
 
-            Continue with
-            Google
-          </button>
+    <div
+      style={{
+        flex: 1,
+        height: "1px",
+        background: "#E2E8F0",
+      }}
+    />
+  </div>
+
+  <div
+    style={{
+      display: "flex",
+      justifyContent: "center",
+      padding: "12px",
+      border: "1px solid #E2E8F0",
+      borderRadius: "16px",
+      background: "#FFFFFF",
+      boxShadow:
+        "0 4px 12px rgba(0,0,0,0.05)",
+    }}
+  >
+    <GoogleLogin
+      theme="outline"
+      size="large"
+      shape="pill"
+      text="continue_with"
+      width="360"
+      onSuccess={
+        handleGoogleSuccess
+      }
+      onError={() =>
+        console.log(
+          "Google Register Failed"
+        )
+      }
+    />
+  </div>
+</div>
+
 
           <p
             style={{
@@ -400,13 +475,14 @@ function Register() {
 
 const inputStyle = {
   width: "100%",
-  padding: "18px",
-  marginBottom: "20px",
+  padding: "18px 20px",
+  marginBottom: "18px",
   borderRadius: "16px",
-  border:
-    "1px solid #E2E8F0",
-  fontSize: "15px",
+  border: "1px solid #CBD5E1",
+  background: "#F8FAFC",
+  fontSize: "16px",
   outline: "none",
+  boxSizing: "border-box",
 };
 
 const buttonStyle = {

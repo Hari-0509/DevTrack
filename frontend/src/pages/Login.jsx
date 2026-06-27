@@ -223,7 +223,7 @@ function Login() {
               "blur(20px)",
             border:
               "1px solid rgba(255,255,255,0.3)",
-            padding: "50px",
+            padding: "55px",
             borderRadius:
               "30px",
             boxShadow:
@@ -301,20 +301,35 @@ function Login() {
           <div
   style={{
     display: "flex",
-    justifyContent:
-      "center"
+    justifyContent: "center",
+    marginTop: "10px",
   }}
 >
-  <GoogleLogin
-    onSuccess={
-      handleGoogleLogin
-    }
+  <div
+    style={{
+      width: "100%",
+      display: "flex",
+      justifyContent: "center",
+      padding: "12px",
+      border: "1px solid #E2E8F0",
+      borderRadius: "16px",
+      background: "#FFFFFF",
+      boxShadow:
+        "0 4px 12px rgba(0,0,0,0.05)",
+    }}
+  >
+    <GoogleLogin
+    theme="filled_blue"
+    size="large"
+    shape="pill"
+    text="continue_with"
+    width="320"
+    onSuccess={handleGoogleLogin}
     onError={() =>
-      alert(
-        "Google Login Failed"
-      )
+      alert("Google Login Failed")
     }
   />
+</div>
 </div>
 
           <p
@@ -346,24 +361,28 @@ function Login() {
 
 const inputStyle = {
   width: "100%",
-  padding: "18px",
-  marginBottom: "20px",
+  padding: "18px 20px",
+  marginBottom: "18px",
   borderRadius: "16px",
-  border: "1px solid #E2E8F0",
-  fontSize: "15px",
+  border: "1px solid #CBD5E1",
+  background: "#F8FAFC",
+  fontSize: "16px",
   outline: "none",
+  boxSizing: "border-box",
 };
 
 const buttonStyle = {
   width: "100%",
   padding: "18px",
-  background: "#2563EB",
+  background:
+    "linear-gradient(135deg,#2563EB,#4F46E5)",
   color: "white",
   border: "none",
   borderRadius: "16px",
   fontSize: "16px",
-  fontWeight: "600",
+  fontWeight: "700",
   cursor: "pointer",
+  transition: "all 0.3s ease",
 };
 
 const googleButton = {
