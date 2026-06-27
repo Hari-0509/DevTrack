@@ -54,13 +54,13 @@ class Task(db.Model):
     def to_dict(self):
 
         return {
-            "id": self.id,
-            "task_name": self.task_name,
-            "description": self.description,
-            "status": self.status,
-            "priority": self.priority,
-            "due_date": self.due_date,
-            "completed": self.completed,
-            "project_id": self.project_id,
-            "assigned_to": self.assigned_to
-        }
+        "id": self.id,
+        "task_name": self.task_name,
+        "description": self.description,
+        "status": self.status,
+        "priority": self.priority,
+        "due_date": self.due_date,
+        "completed": self.completed,
+        "project_id": self.project_id,
+        "assigned_to": self.assigned_to
+    }

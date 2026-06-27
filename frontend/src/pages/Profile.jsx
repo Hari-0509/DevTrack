@@ -112,13 +112,14 @@ function Profile() {
   }
 
   const productivity =
-    profile.projects > 0
-      ? Math.round(
-          (profile.completed /
-            profile.projects) *
-            100
-        )
-      : 0;
+  profile.total_tasks > 0
+    ? Math.round(
+        (
+          profile.completed /
+          profile.total_tasks
+        ) * 100
+      )
+    : 0;
 
   return (
     <MainLayout>
@@ -255,7 +256,16 @@ function Profile() {
             }
             color="#16A34A"
           />
-
+          <StatCard
+  darkMode={
+    darkMode
+  }
+  title="Tasks"
+  value={
+    profile.total_tasks
+  }
+  color="#7C3AED"
+/>
           <StatCard
             darkMode={
               darkMode
@@ -306,7 +316,11 @@ function Profile() {
                 height:
                   "100%",
                 background:
-                  "#16A34A",
+  productivity >= 80
+    ? "#16A34A"
+    : productivity >= 50
+    ? "#F59E0B"
+    : "#DC2626",
               }}
             />
           </div>

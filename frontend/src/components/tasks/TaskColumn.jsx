@@ -198,9 +198,9 @@ function TaskColumn({
   >
     👤 Assigned To:
     {" "}
-    User
     {
-      task.assigned_to
+      task.assigned_to ||
+      "Unassigned"
     }
   </div>
 )}

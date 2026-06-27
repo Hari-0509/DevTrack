@@ -12,6 +12,9 @@ from database.db import db
 from models.user import User
 from models.project import Project
 from models.task import Task
+from models.project_member import (
+    ProjectMember
+)
 
 from utils.password import bcrypt
 
@@ -36,46 +39,80 @@ def get_profile():
         user_id
     )
 
-    projects = (
-        Project.query.filter_by(
-            user_id=user_id
-        ).count()
-    )
-
-    project_ids = [
-        project.id
-        for project in
+    # Projects created by me
+    owned_projects = (
         Project.query.filter_by(
             user_id=user_id
         ).all()
+    )
+
+    # Projects shared with me
+    member_projects = (
+        Project.query.join(
+            ProjectMember,
+            Project.id ==
+            ProjectMember.project_id
+        )
+        .filter(
+            ProjectMember.user_id ==
+            user_id
+        )
+        .all()
+    )
+
+    # Remove duplicates
+    projects = list({
+        p.id: p
+        for p in (
+            owned_projects +
+            member_projects
+        )
+    }.values())
+
+    project_ids = [
+        project.id
+        for project in projects
     ]
 
-    completed = (
-        Task.query.filter(
-            Task.project_id.in_(
-                project_ids
-            ),
-            Task.status ==
-            "Completed"
-        ).count()
+    if project_ids:
+        completed = (
+            Task.query.filter(
+                Task.project_id.in_(
+                    project_ids
+                ),
+                Task.status ==
+                "Completed"
+            ).count()
+        )
+    else:
+        completed = 0
+
+    total_tasks = (
+    Task.query.filter(
+        Task.project_id.in_(
+            project_ids
+        )
+    ).count()
+    if project_ids
+    else 0
     )
 
     return {
-        "id":
-            user.id,
-        "name":
-            user.username,
-        "email":
-            user.email,
-        "role":
-            user.role,
-        "projects":
-            projects,
-        "completed":
-            completed
-    }
-
-
+    "id":
+        user.id,
+    "name":
+        user.username,
+    "email":
+        user.email,
+    "role":
+        user.role,
+    "projects":
+        len(projects),
+    "completed":
+        completed,
+    "total_tasks":
+        total_tasks
+}
 @profile.route(
     "/profile",
     methods=["PUT"]

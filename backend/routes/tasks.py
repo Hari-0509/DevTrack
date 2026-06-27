@@ -4,14 +4,10 @@ from flask_jwt_extended import (
     get_jwt_identity
 )
 
-from database.db import db
-
 from models.task import Task
 from models.project import Project
-from models.project_member import (
-    ProjectMember
-)
-
+from models.project_member import ProjectMember
+from models.user import User
 tasks = Blueprint(
     "tasks",
     __name__
@@ -168,12 +164,38 @@ def get_tasks():
     else:
         task_list = []
 
-    return [
-        task.to_dict()
-        for task
-        in task_list
-    ]
+    result = []
 
+    for task in task_list:
+
+        data = task.to_dict()
+
+        if task.assigned_to:
+
+            user = User.query.get(
+                task.assigned_to
+            )
+
+            data[
+                "assigned_name"
+            ] = (
+                user.username
+                if user
+                else None
+            )
+
+        else:
+            data[
+                "assigned_name"
+            ] = None
+
+        result.append(
+            data
+        )
+
+    return result
+
+    
 
 # ==========================================
 # UPDATE TASK
