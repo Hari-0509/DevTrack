@@ -186,21 +186,18 @@ function TaskColumn({
                       {task.assigned_to && (
   <div
     style={{
-      marginBottom:
-        "20px",
-      color:
-        "#475569",
-      fontWeight:
-        "600",
-      fontSize:
-        "14px",
+      marginBottom: "15px",
+      color: "#475569",
+      fontSize: "14px",
+      fontWeight: "600",
     }}
+  
   >
     👤 Assigned To:
     {" "}
     {
-      task.assigned_to ||
-      "Unassigned"
+      task.assigned_name ||
+      `User ${task.assigned_to}`
     }
   </div>
 )}

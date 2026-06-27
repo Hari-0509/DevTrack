@@ -18,6 +18,7 @@ import Projects from "./pages/Projects";
 import Tasks from "./pages/Tasks";
 import Analytics from "./pages/Analytics";
 import Profile from "./pages/Profile";
+import Settings from "./pages/Settings";
 
 export const ThemeContext =
   createContext();
@@ -147,6 +148,18 @@ function App() {
   element={
     token ? (
       <Profile />
+    ) : (
+      <Navigate
+        to="/login"
+      />
+    )
+  }
+/>
+        <Route
+  path="/settings"
+  element={
+    token ? (
+      <Settings />
     ) : (
       <Navigate
         to="/login"

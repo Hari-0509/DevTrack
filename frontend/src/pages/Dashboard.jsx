@@ -46,8 +46,12 @@ function Dashboard() {
     setTasks,
   ] = useState([]);
 
+  const [activities, setActivities] =
+  useState([]);
+
   useEffect(() => {
   loadDashboard();
+  loadActivities();
 
   window.addEventListener(
     "focus",
@@ -116,6 +120,23 @@ function Dashboard() {
       );
     }
   };
+
+  const loadActivities =
+  async () => {
+    try {
+      const response =
+        await api.get(
+          "/activities"
+        );
+
+      setActivities(
+        response.data
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  
 
   const pendingTasks =
     tasks.filter(
@@ -208,6 +229,8 @@ function Dashboard() {
     icon="⏳"
   />
 </div>
+
+
 
       {/* Analytics */}
 
@@ -308,7 +331,96 @@ function Dashboard() {
           )}
         </div>
       </div>
+    {/* Recent Activity */}
 
+<div
+  style={{
+    background: "#FFFFFF",
+    borderRadius: "24px",
+    padding: "35px",
+    boxShadow:
+      "0 10px 30px rgba(0,0,0,0.06)",
+    border:
+      "1px solid #E2E8F0",
+    marginBottom:
+      "35px",
+  }}
+>
+  <h2
+    style={{
+      marginTop: 0,
+      marginBottom:
+        "30px",
+      color:
+        "#0F172A",
+    }}
+  >
+    Recent Activity
+  </h2>
+
+  {activities.length ===
+  0 ? (
+    <p
+      style={{
+        color:
+          "#64748B",
+      }}
+    >
+      No activities yet 🎉
+    </p>
+  ) : (
+    activities.map(
+      (item) => (
+        <div
+          key={item.id}
+          style={{
+            padding:
+              "16px 0",
+            borderBottom:
+              "1px solid #E2E8F0",
+          }}
+        >
+          <div
+            style={{
+              fontWeight:
+                "600",
+              color:
+                "#0F172A",
+            }}
+          >
+            {item.action.includes(
+              "Completed"
+            )
+              ? "✅"
+              : item.action.includes(
+                  "Created"
+                )
+              ? "🆕"
+              : item.action.includes(
+                  "Deleted"
+                )
+              ? "🗑️"
+              : "📌"}
+
+            {" "}
+            {item.action}
+          </div>
+
+          <small
+            style={{
+              color:
+                "#64748B",
+            }}
+          >
+            {new Date(
+              item.created_at
+            ).toLocaleString()}
+          </small>
+        </div>
+      )
+    )
+  )}
+</div>
       {/* Projects */}
 
       <div
