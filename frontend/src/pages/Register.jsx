@@ -416,23 +416,15 @@ function Register() {
     style={{
       display: "flex",
       justifyContent: "center",
-      padding: "12px",
-      border: "1px solid #E2E8F0",
-      borderRadius: "16px",
-      background: "#FFFFFF",
-      boxShadow:
-        "0 4px 12px rgba(0,0,0,0.05)",
     }}
   >
     <GoogleLogin
       theme="outline"
       size="large"
-      shape="pill"
+      shape="rectangular"
       text="continue_with"
-      width="360"
-      onSuccess={
-        handleGoogleSuccess
-      }
+      width="320"
+      onSuccess={handleGoogleSuccess}
       onError={() =>
         console.log(
           "Google Register Failed"
@@ -441,7 +433,6 @@ function Register() {
     />
   </div>
 </div>
-
 
           <p
             style={{
@@ -515,4 +506,3 @@ const googleButton = {
 };
 
 export default Register;
-

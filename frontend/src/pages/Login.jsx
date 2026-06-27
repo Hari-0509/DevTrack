@@ -302,26 +302,12 @@ function Login() {
   style={{
     display: "flex",
     justifyContent: "center",
-    marginTop: "10px",
   }}
 >
-  <div
-    style={{
-      width: "100%",
-      display: "flex",
-      justifyContent: "center",
-      padding: "12px",
-      border: "1px solid #E2E8F0",
-      borderRadius: "16px",
-      background: "#FFFFFF",
-      boxShadow:
-        "0 4px 12px rgba(0,0,0,0.05)",
-    }}
-  >
-    <GoogleLogin
-    theme="filled_blue"
+  <GoogleLogin
+    theme="outline"
     size="large"
-    shape="pill"
+    shape="rectangular"
     text="continue_with"
     width="320"
     onSuccess={handleGoogleLogin}
@@ -329,7 +315,6 @@ function Login() {
       alert("Google Login Failed")
     }
   />
-</div>
 </div>
 
           <p
