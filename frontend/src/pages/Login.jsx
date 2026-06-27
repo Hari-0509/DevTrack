@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import api from "../services/api";
-
+import {
+  GoogleLogin
+} from "@react-oauth/google";
 function Login() {
   const navigate = useNavigate();
 
@@ -25,6 +27,38 @@ function Login() {
       alert("Invalid Email or Password");
     }
   };
+
+  const handleGoogleLogin =
+  async (
+    credentialResponse
+  ) => {
+    try {
+
+      const response =
+        await api.post(
+          "/google-login",
+          {
+            token:
+              credentialResponse
+                .credential
+          }
+        );
+
+      localStorage.setItem(
+        "token",
+        response.data.token
+      );
+
+      navigate("/");
+    }
+    catch (error) {
+      console.log(error);
+
+      alert(
+        "Google login failed"
+      );
+    }
+};
 
   return (
     <div
@@ -264,19 +298,24 @@ function Login() {
             OR
           </div>
 
-          <button
-            style={
-              googleButton
-            }
-          >
-            <img
-              src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
-              width="22"
-              alt="google"
-            />
-
-            Continue with Google
-          </button>
+          <div
+  style={{
+    display: "flex",
+    justifyContent:
+      "center"
+  }}
+>
+  <GoogleLogin
+    onSuccess={
+      handleGoogleLogin
+    }
+    onError={() =>
+      alert(
+        "Google Login Failed"
+      )
+    }
+  />
+</div>
 
           <p
             style={{

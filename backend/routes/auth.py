@@ -6,7 +6,13 @@ from models.user import User
 from flask_jwt_extended import jwt_required
 from flask_jwt_extended import get_jwt_identity
 from utils.password import bcrypt
+from google.oauth2 import (
+    id_token
+)
 
+from google.auth.transport import (
+    requests
+)
 auth = Blueprint(
     "auth",
     __name__
@@ -95,3 +101,83 @@ def login():
         "message": "Login successful",
         "token": access_token
     }, 200
+
+@auth.route(
+    "/google-login",
+    methods=["POST"]
+)
+def google_login():
+
+    data = request.get_json()
+
+    token = data.get(
+        "token"
+    )
+
+    try:
+
+        info = (
+            id_token
+            .verify_oauth2_token(
+                token,
+                requests.Request(),
+                "339645643863-6ji4872gdoamm5fe7g3rtr9kcnfk4019.apps.googleusercontent.com"
+            )
+        )
+
+        email = info[
+            "email"
+        ]
+
+        username = info.get(
+            "name"
+        )
+
+        user = (
+            User.query
+            .filter_by(
+                email=email
+            )
+            .first()
+        )
+
+        if not user:
+
+            user = User(
+                username=
+                    username,
+
+                email=
+                    email,
+
+                password=""
+            )
+
+            db.session.add(
+                user
+            )
+
+            db.session.commit()
+
+        access_token = (
+            create_access_token(
+                identity=
+                    str(
+                        user.id
+                    )
+            )
+        )
+
+        return {
+            "token":
+                access_token
+        }
+
+    except Exception as e:
+
+        print(e)
+
+        return {
+            "message":
+                "Google login failed"
+        }, 401
