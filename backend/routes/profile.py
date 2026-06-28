@@ -198,3 +198,4 @@ def change_password():
         "message":
         "Password updated successfully"
     }
+    

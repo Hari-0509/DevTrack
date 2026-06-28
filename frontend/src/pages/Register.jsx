@@ -506,3 +506,4 @@ const googleButton = {
 };
 
 export default Register;
+
