@@ -13,6 +13,14 @@ from google.oauth2 import (
 from google.auth.transport import (
     requests
 )
+
+from itsdangerous import URLSafeTimedSerializer
+from utils.password import bcrypt
+
+serializer = URLSafeTimedSerializer(
+    "devtrack_super_secret_key"
+)
+
 auth = Blueprint(
     "auth",
     __name__
@@ -182,3 +190,96 @@ def google_login():
             "message":
                 "Google login failed"
         }, 401
+    
+@auth.route(
+    "/forgot-password",
+    methods=["POST"]
+)
+def forgot_password():
+
+    data = request.get_json()
+
+    email = data.get("email")
+
+    user = User.query.filter_by(
+        email=email
+    ).first()
+
+    if not user:
+        return {
+            "message":
+            "Email not found"
+        },404
+
+    token = serializer.dumps(
+        email,
+        salt="reset-password"
+    )
+
+    reset_link = (
+        f"http://localhost:5173/reset-password/{token}"
+    )
+
+    print(
+        "\nRESET LINK:\n",
+        reset_link,
+        "\n"
+    )
+
+    return {
+        "message":
+        "Reset link generated",
+        "link":
+        reset_link
+    }
+
+@auth.route(
+    "/reset-password",
+    methods=["POST"]
+)
+def reset_password():
+
+    data = request.get_json()
+
+    token = data.get("token")
+
+    new_password = data.get(
+        "password"
+    )
+
+    try:
+
+        email = serializer.loads(
+            token,
+            salt="reset-password",
+            max_age=900
+        )
+
+    except Exception:
+
+        return {
+            "message":
+            "Invalid or expired token"
+        },400
+
+    user = User.query.filter_by(
+        email=email
+    ).first()
+
+    if not user:
+
+        return {
+            "message":
+            "User not found"
+        },404
+
+    user.password = bcrypt.generate_password_hash(
+        new_password
+    ).decode("utf-8")
+
+    db.session.commit()
+
+    return {
+        "message":
+        "Password updated successfully"
+    }

@@ -41,6 +41,8 @@ from flask_cors import CORS
 
 app = Flask(__name__)
 
+app.config["SECRET_KEY"] = "devtrack_super_secret_key"
+
 CORS(
     app,
     resources={
