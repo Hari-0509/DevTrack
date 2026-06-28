@@ -19,6 +19,8 @@ import Tasks from "./pages/Tasks";
 import Analytics from "./pages/Analytics";
 import Profile from "./pages/Profile";
 import Settings from "./pages/Settings";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 
 export const ThemeContext =
   createContext();
@@ -144,6 +146,15 @@ function App() {
           }
         />
         <Route
+  path="/forgot-password"
+  element={<ForgotPassword />}
+/>
+
+<Route
+  path="/reset-password/:token"
+  element={<ResetPassword />}
+/>
+        <Route
   path="/profile"
   element={
     token ? (
@@ -166,11 +177,6 @@ function App() {
       />
     )
   }
-/>
-
-<Route
-  path="/forgot-password"
-  element={<ForgotPassword />}
 />
 
       </Routes>

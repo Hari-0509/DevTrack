@@ -278,6 +278,25 @@ function Login() {
             style={inputStyle}
           />
 
+          <div
+  style={{
+    textAlign: "right",
+    marginBottom: "20px",
+  }}
+>
+  <Link
+    to="/forgot-password"
+    style={{
+      color: "#2563EB",
+      textDecoration: "none",
+      fontWeight: "600",
+      fontSize: "14px",
+    }}
+  >
+    Forgot Password?
+  </Link>
+</div>
+
           <button
             onClick={
               handleLogin
