@@ -22,7 +22,7 @@ function ResetPassword() {
     async () => {
 
       if (!password) {
-        alert(
+        toast.error(
           "Please enter a password"
         );
         return;
@@ -32,7 +32,7 @@ function ResetPassword() {
         password !==
         confirmPassword
       ) {
-        alert(
+        toast.error(
           "Passwords do not match"
         );
         return;
@@ -50,7 +50,7 @@ function ResetPassword() {
           }
         );
 
-        alert(
+        toast.success(
           "Password changed successfully."
         );
 
@@ -59,7 +59,7 @@ function ResetPassword() {
       }
       catch (error) {
 
-        alert(
+        toast.error(
           error.response?.data
             ?.message ||
           "Unable to reset password."

@@ -32,7 +32,7 @@ function CreateProjectModal({
         close();
         refresh();
       } catch (error) {
-        alert(
+        toast.error(
           "Failed to create project"
         );
       }

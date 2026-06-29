@@ -24,8 +24,26 @@ ReactDOM.createRoot(
   position="top-right"
   toastOptions={{
     duration: 3000,
+    style: {
+      borderRadius: "12px",
+      fontWeight: "600",
+      padding: "16px",
+    },
+    success: {
+      iconTheme: {
+        primary: "#16A34A",
+        secondary: "#fff",
+      },
+    },
+    error: {
+      iconTheme: {
+        primary: "#DC2626",
+        secondary: "#fff",
+      },
+    },
   }}
 />
+
       </GoogleOAuthProvider>
     </BrowserRouter>
   </React.StrictMode>

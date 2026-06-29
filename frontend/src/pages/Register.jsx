@@ -26,7 +26,7 @@ function Register() {
         password !==
         confirmPassword
       ) {
-        alert(
+        toast.error(
           "Passwords do not match"
         );
         return;
@@ -42,13 +42,13 @@ function Register() {
           }
         );
 
-        alert(
+        toast.success(
           "Account created successfully"
         );
 
         navigate("/login");
       } catch (error) {
-        alert(
+        toast.error(
           "Registration failed"
         );
       }
@@ -80,7 +80,7 @@ function Register() {
     catch (error) {
       console.log(error);
 
-      alert(
+      toast.error(
         "Google Register Failed"
       );
     }

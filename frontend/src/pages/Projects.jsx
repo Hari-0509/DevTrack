@@ -105,7 +105,7 @@ const [
           }
         );
 
-      alert(
+      toast.success(
         res.data.message
       );
 
@@ -128,7 +128,7 @@ const [
         error
       );
 
-      alert(
+      toast.error(
         error.response
           ?.data
           ?.message ||

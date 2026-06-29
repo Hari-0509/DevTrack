@@ -10,6 +10,8 @@ function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const [loading, setLoading] = useState(false);
+
   const handleLogin = async () => {
     try {
       const response = await api.post("/login", {
@@ -24,7 +26,7 @@ function Login() {
 
       navigate("/");
     } catch (error) {
-      alert("Invalid Email or Password");
+      toast.error("Invalid Email or Password");
     }
   };
 
@@ -54,7 +56,7 @@ function Login() {
     catch (error) {
       console.log(error);
 
-      alert(
+      toast.error(
         "Google login failed"
       );
     }
@@ -298,13 +300,17 @@ function Login() {
 </div>
 
           <button
-            onClick={
-              handleLogin
-            }
-            style={buttonStyle}
-          >
-            Sign In
-          </button>
+  onClick={handleLogin}
+  style={{
+    ...buttonStyle,
+    opacity: loading ? 0.7 : 1,
+  }}
+  disabled={loading}
+>
+  {loading
+    ? "Signing In..."
+    : "Sign In"}
+</button>
 
           <div
             style={{
@@ -331,7 +337,7 @@ function Login() {
     width="320"
     onSuccess={handleGoogleLogin}
     onError={() =>
-      alert("Google Login Failed")
+      toast.error("Google Login Failed")
     }
   />
 </div>

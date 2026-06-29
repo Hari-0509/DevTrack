@@ -75,7 +75,7 @@ function Navbar() {
 
       loadInvitations();
 
-      alert(
+      toast.success(
         "Invitation Accepted"
       );
     } catch (
@@ -96,7 +96,7 @@ function Navbar() {
 
       loadInvitations();
 
-      alert(
+      toast.success(
         "Invitation Declined"
       );
     } catch (

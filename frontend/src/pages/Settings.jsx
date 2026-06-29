@@ -125,7 +125,7 @@ function Settings() {
       !password.currentPassword ||
       !password.newPassword
     ) {
-      alert(
+      toast.error(
         "Fill both password fields"
       );
       return;

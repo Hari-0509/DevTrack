@@ -491,7 +491,7 @@ function Profile() {
           false
         );
 
-        alert(
+        toast.success(
           "Profile Updated Successfully"
         );
       } catch (
@@ -500,7 +500,7 @@ function Profile() {
         console.log(
           error
         );
-        alert(
+        toast.error(
           "Unable to update profile"
         );
       }
@@ -593,7 +593,7 @@ function Profile() {
         !currentPassword ||
         !newPassword
       ) {
-        alert(
+        toast.error(
           "Please fill all fields"
         );
         return;
@@ -609,7 +609,7 @@ function Profile() {
             }
           );
 
-        alert(
+        toast.success(
           res.data.message
         );
 
@@ -632,7 +632,7 @@ function Profile() {
           error
         );
 
-        alert(
+        toast.error(
           error.response
             ?.data
             ?.message ||

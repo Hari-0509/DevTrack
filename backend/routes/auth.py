@@ -233,6 +233,13 @@ def forgot_password():
         reset_link
     }
 
+# send_email(reset_link)
+
+#return {
+    #"message":
+    ##    "Password reset email sent"
+#}
+
 @auth.route(
     "/reset-password",
     methods=["POST"]
