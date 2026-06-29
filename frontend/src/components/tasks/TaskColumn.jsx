@@ -3,6 +3,9 @@ import {
   Draggable,
 } from "@hello-pangea/dnd";
 
+import AttachmentUploader from "./AttachmentUploader";
+import AttachmentList from "./AttachmentList";
+
 function TaskColumn({
   title,
   tasks,
@@ -303,6 +306,25 @@ function TaskColumn({
                           Delete
                         </button>
                       </div>
+                      <hr
+  style={{
+    marginTop: "20px",
+    marginBottom: "20px",
+    border: "none",
+    borderTop: "1px solid #E2E8F0",
+  }}
+/>
+
+<AttachmentUploader
+    taskId={task.id}
+    onUploadSuccess={()=>{
+        // Temporary
+    }}
+/>
+
+<AttachmentList
+    taskId={task.id}
+/>
                     </div>
                   )}
                 </Draggable>
@@ -313,11 +335,15 @@ function TaskColumn({
               provided.placeholder
             }
           </div>
+
+          
         )}
       </Droppable>
     </div>
   );
 }
+
+
 
 const moveButton = {
   background:

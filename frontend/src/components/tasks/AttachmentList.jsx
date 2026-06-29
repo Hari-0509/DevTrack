@@ -7,6 +7,19 @@ function AttachmentList({ taskId }) {
   const [attachments, setAttachments] =
     useState([]);
 
+    const addAttachment =
+(
+newAttachment
+)=>
+{
+    setAttachments(
+        previous=>[
+            ...previous,
+            newAttachment
+        ]
+    );
+};
+
   const [loading, setLoading] =
     useState(true);
 
@@ -213,5 +226,9 @@ function AttachmentList({ taskId }) {
   );
 
 }
+
+export {
+    AttachmentList
+};
 
 export default AttachmentList;

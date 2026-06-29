@@ -128,15 +128,11 @@ def get_attachments(task_id):
     methods=["POST"]
 )
 @jwt_required()
-def upload_attachment():
+def upload_attachment(task_id):
 
     current_user = int(
         get_jwt_identity()
     )
-
-    task_id = request.view_args[
-        "task_id"
-    ]
 
     task = Task.query.get(task_id)
 
@@ -266,12 +262,7 @@ from flask import send_from_directory
     "/attachments/<int:attachment_id>",
     methods=["GET"]
 )
-@jwt_required()
 def download_attachment(attachment_id):
-
-    current_user = int(
-        get_jwt_identity()
-    )
 
     attachment = TaskAttachment.query.get(
         attachment_id
@@ -283,34 +274,15 @@ def download_attachment(attachment_id):
             "Attachment not found"
         },404
 
-    task = Task.query.get(
-        attachment.task_id
+    return send_from_directory(
+        os.path.dirname(
+            attachment.filepath
+        ),
+        os.path.basename(
+            attachment.filepath
+        ),
+        as_attachment=False
     )
-
-    project = Project.query.get(
-        task.project_id
-    )
-
-    is_owner = (
-        project.user_id ==
-        current_user
-    )
-
-    is_member = (
-        ProjectMember.query.filter_by(
-            project_id=project.id,
-            user_id=current_user
-        ).first()
-    )
-
-    if (
-        not is_owner and
-        not is_member
-    ):
-        return {
-            "message":
-            "Access denied"
-        },403
 
     directory = os.path.dirname(
         attachment.filepath

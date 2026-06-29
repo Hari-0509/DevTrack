@@ -34,26 +34,29 @@ function AttachmentUploader({
 
       try {
 
-        await api.post(
-          `/tasks/${taskId}/attachments`,
-          formData,
-          {
-            headers: {
-              "Content-Type":
-                "multipart/form-data",
-            },
-          }
-        );
-
-        toast.success(
-          "File uploaded successfully"
-        );
-
-        if (
-          onUploadSuccess
-        ) {
-          onUploadSuccess();
+        const response =
+    await api.post(
+        `/tasks/${taskId}/attachments`,
+        formData,
+        {
+            headers:{
+                "Content-Type":
+                "multipart/form-data"
+            }
         }
+    );
+
+toast.success(
+    "File uploaded successfully"
+);
+
+if(
+    onUploadSuccess
+){
+    onUploadSuccess(
+        response.data.attachment
+    );
+}
 
       } catch (error) {
 

@@ -35,6 +35,7 @@ from routes.project_members import (
     project_members
 )
 from routes.attachments import attachments
+from models.task_attachment import TaskAttachment
 from models.activity import Activity
 from routes.activity import activity
 from flask import Flask
