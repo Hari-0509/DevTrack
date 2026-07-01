@@ -13,6 +13,9 @@ import api from "../services/api";
 import StatsCard from "../components/StatsCard";
 import ChartCard from "../components/ChartCard";
 
+import useResponsive
+from "../hooks/useResponsive";
+
 function Dashboard() {
   const navigate =
     useNavigate();
@@ -45,6 +48,9 @@ function Dashboard() {
     tasks,
     setTasks,
   ] = useState([]);
+
+  const mobile =
+useResponsive();
 
   const [activities, setActivities] =
   useState([]);
@@ -115,9 +121,7 @@ function Dashboard() {
         taskRes.data
       );
     } catch (error) {
-      console.log(
-        error
-      );
+      
     }
   };
 
@@ -133,7 +137,7 @@ function Dashboard() {
         response.data
       );
     } catch (error) {
-      console.log(error);
+      
     }
   };
   
@@ -184,7 +188,9 @@ function Dashboard() {
   style={{
     display: "grid",
     gridTemplateColumns:
-      "repeat(auto-fit,minmax(280px,1fr))",
+    mobile
+    ? "1fr"
+    : "repeat(4,1fr)",
     gap: "25px",
     marginBottom: "40px",
   }}
@@ -239,7 +245,9 @@ function Dashboard() {
           display:
             "grid",
           gridTemplateColumns:
-            "1fr 1fr",
+            mobile
+            ? "1fr"
+            : "1fr 1fr",
           gap: "25px",
           marginBottom:
             "35px",
