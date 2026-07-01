@@ -4,6 +4,7 @@ import api from "../services/api";
 import {
   GoogleLogin
 } from "@react-oauth/google";
+import useResponsive from "../hooks/useResponsive";
 function Login() {
   const navigate = useNavigate();
 
@@ -11,6 +12,8 @@ function Login() {
   const [password, setPassword] = useState("");
 
   const [loading, setLoading] = useState(false);
+
+  const mobile = useResponsive();
 
   const handleLogin = async () => {
     try {
@@ -54,7 +57,7 @@ function Login() {
       navigate("/");
     }
     catch (error) {
-      console.log(error);
+      
 
       toast.error(
         "Google login failed"
@@ -218,7 +221,10 @@ function Login() {
       >
         <div
           style={{
-            width: "460px",
+            width: 
+            mobile
+            ? "95%"
+            : "450px",
             background:
               "rgba(255,255,255,0.9)",
             backdropFilter:
