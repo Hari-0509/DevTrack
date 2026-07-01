@@ -73,7 +73,7 @@ function Tasks() {
           : []
       );
     } catch (error) {
-      console.log(error);
+      
     }
   };
 
@@ -90,7 +90,6 @@ function Tasks() {
           : []
       );
     } catch (error) {
-      console.log(error);
     }
   };
 
@@ -110,7 +109,6 @@ function Tasks() {
           : []
       );
     } catch (error) {
-      console.log(error);
       setMembers([]);
     }
   };
@@ -148,7 +146,7 @@ function Tasks() {
         clearForm();
         loadTasks();
       } catch (error) {
-        console.log(error);
+        
       }
     };
 
@@ -182,7 +180,7 @@ function Tasks() {
       clearForm();
       loadTasks();
     } catch (error) {
-      console.log(error);
+      
     }
   };
 
@@ -195,7 +193,7 @@ function Tasks() {
 
         loadTasks();
       } catch (error) {
-        console.log(error);
+        
       }
     };
 
@@ -298,7 +296,6 @@ function Tasks() {
       loadTasks();
 
     } catch (error) {
-      console.log(error);
     }
   };
 
@@ -339,9 +336,7 @@ function Tasks() {
       loadTasks();
 
     } catch (error) {
-      console.log(
-        error
-      );
+      
     }
   };
 
