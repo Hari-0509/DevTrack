@@ -53,16 +53,18 @@ function Navbar() {
           "/invitations"
         );
 
-      console.log(
-        "INVITATIONS",
-        res.data
-      );
+      // console.log(
+      //   "INVITATIONS",
+      //   res.data
+      // );
 
       setInvitations(
         res.data
       );
     } catch (err) {
-      console.log(err);
+      toast.error(
+        "Failed to load invitations"
+      );
     }
   };
 
@@ -81,8 +83,8 @@ function Navbar() {
     } catch (
       error
     ) {
-      console.log(
-        error
+      toast.error(
+        "Failed to accept invitation"
       );
     }
   };
@@ -102,9 +104,7 @@ function Navbar() {
     } catch (
       error
     ) {
-      console.log(
-        error
-      );
+      
     }
   };
 
@@ -196,9 +196,7 @@ function Navbar() {
       } catch (
         error
       ) {
-        console.log(
-          error
-        );
+        
       }
     };
 

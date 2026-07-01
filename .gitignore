@@ -1,8 +1,24 @@
+# Python
+dev/
+venv/
+.env
 __pycache__/
 *.pyc
-.env
-instance/
-uploads/
-venv/
-node_modules/
-dist/
+
+# Database
+backend/instance/
+*.db
+
+# Uploads
+backend/uploads/
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# VS Code
+.vscode/

@@ -1,7 +1,9 @@
+import { toast } from "react-toastify";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import api from "../services/api";
 import { GoogleLogin } from "@react-oauth/google";
+
 
 function Register() {
   const navigate = useNavigate();
@@ -48,10 +50,15 @@ function Register() {
 
         navigate("/login");
       } catch (error) {
-        toast.error(
-          "Registration failed"
-        );
-      }
+
+    console.log(error.response);
+
+    toast.error(
+        error.response?.data?.message ||
+        "Registration failed"
+    );
+
+}
     };
 
    const handleGoogleSuccess =
@@ -262,10 +269,8 @@ function Register() {
       >
         <div
           style={{
-            width:
-            mobile
-            ? "95%"
-            : "500px",
+            width: "500px",
+            maxWidth: "95%",
             background:
               "rgba(255,255,255,0.9)",
             backdropFilter:
