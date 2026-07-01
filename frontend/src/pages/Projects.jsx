@@ -56,7 +56,7 @@ const [
           : []
       );
     } catch (error) {
-      console.log(error);
+      
     }
   };
 
@@ -77,7 +77,7 @@ const [
 
         loadProjects();
       } catch (error) {
-        console.log(error);
+        
       }
     };
 
@@ -124,9 +124,7 @@ const [
     } catch (
       error
     ) {
-      console.log(
-        error
-      );
+      
 
       toast.error(
         error.response
