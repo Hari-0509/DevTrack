@@ -1,6 +1,8 @@
-venv/
-dev/
-.env
 __pycache__/
 *.pyc
-.vscode/
+.env
+instance/
+uploads/
+venv/
+node_modules/
+dist/
