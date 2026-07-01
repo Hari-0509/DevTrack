@@ -78,7 +78,7 @@ function Register() {
       navigate("/");
     }
     catch (error) {
-      console.log(error);
+      
 
       toast.error(
         "Google Register Failed"
@@ -262,7 +262,10 @@ function Register() {
       >
         <div
           style={{
-            width: "520px",
+            width:
+            mobile
+            ? "95%"
+            : "500px",
             background:
               "rgba(255,255,255,0.9)",
             backdropFilter:
@@ -426,7 +429,7 @@ function Register() {
       width="320"
       onSuccess={handleGoogleSuccess}
       onError={() =>
-        console.log(
+        toast.error(
           "Google Register Failed"
         )
       }
