@@ -90,7 +90,7 @@ function Profile() {
           res.data
         );
       } catch (error) {
-        console.log(error);
+        
       }
     };
 
@@ -497,9 +497,7 @@ function Profile() {
       } catch (
         error
       ) {
-        console.log(
-          error
-        );
+        
         toast.error(
           "Unable to update profile"
         );
@@ -628,9 +626,7 @@ function Profile() {
       } catch (
         error
       ) {
-        console.log(
-          error
-        );
+        
 
         toast.error(
           error.response
