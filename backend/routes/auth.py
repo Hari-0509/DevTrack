@@ -1,3 +1,5 @@
+from extensions import mail
+from utils.mail import send_reset_email
 from flask import Blueprint
 from flask import request
 from flask_jwt_extended import create_access_token
@@ -17,8 +19,11 @@ from google.auth.transport import (
 from itsdangerous import URLSafeTimedSerializer
 from utils.password import bcrypt
 
+
+import os
+
 serializer = URLSafeTimedSerializer(
-    "devtrack_super_secret_key"
+    os.getenv("SECRET_KEY")
 )
 
 auth = Blueprint(
@@ -226,12 +231,17 @@ def forgot_password():
         "\n"
     )
 
+    from utils.mail import send_reset_email
+
+    send_reset_email(
+    mail,
+    user.email,
+    reset_link
+    )
+
     return {
-        "message":
-        "Reset link generated",
-        "link":
-        reset_link
-    }
+        "message": "Password reset email sent."
+    }, 200
 
 # send_email(reset_link)
 
